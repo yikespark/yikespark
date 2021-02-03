@@ -2,6 +2,7 @@ package com.yikes.park.ui.login;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,12 +12,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 import com.yikes.park.R;
+import com.yikes.park.usecase.map.MapsActivity;
 
 public class MainFragment extends Fragment {
 
@@ -38,8 +41,26 @@ public class MainFragment extends Fragment {
         customCarouselView.setPageCount(NUMBER_OF_PAGES);
         customCarouselView.setViewListener(viewListener);
 
+        /* TESTING BUTTON */
+        Button btn_google = root.findViewById(R.id.button4);
+        btn_google.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToGoogleMaps();
+            }
+        });
+        /* END TEST */
+
+
         return root;
     }
+
+    /* TESTING METHOD */
+    public void goToGoogleMaps() {
+        startActivity(new Intent(getContext(), MapsActivity.class));
+    }
+    /* END TEST */
+
 
     ViewListener viewListener = new ViewListener() {
 

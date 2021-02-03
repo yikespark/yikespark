@@ -64,9 +64,6 @@ public class MainFragment extends Fragment {
                     image.setImageResource(R.drawable.image0);
                     break;
             }
-
-
-
             return customView;
         }
     };

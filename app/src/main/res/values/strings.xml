@@ -1,4 +1,14 @@
 <resources>
-    <string name="app_name">yikes</string>
+    <string name="app_name">YikesPark</string>
     <string name="title_activity_maps">Map</string>
+    <string name="btnMap">Map</string>
+    <string name="btnProfile">Profile</string>
+    <string name="btnSettings">Settings</string>
+    <string name="txtSave">Save</string>
+    <string name="Language">Language</string>
+
+    <string-array name="Languages">
+        <item>English</item>
+        <item>Spanish</item>
+    </string-array>
 </resources>

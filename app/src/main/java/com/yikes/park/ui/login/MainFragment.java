@@ -1,14 +1,8 @@
 package com.yikes.park.ui.login;
 
-import androidx.lifecycle.ViewModelProvider;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +10,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 import com.yikes.park.R;
-import com.yikes.park.usecase.map.MapsActivity;
+import com.yikes.park.menus.MainActivity;
 
 public class MainFragment extends Fragment {
 
-    private MainViewModel mViewModel;
     CarouselView customCarouselView;
     int NUMBER_OF_PAGES = 2;
 
@@ -57,7 +54,7 @@ public class MainFragment extends Fragment {
 
     /* TESTING METHOD */
     public void goToGoogleMaps() {
-        startActivity(new Intent(getContext(), MapsActivity.class));
+        startActivity(new Intent(getContext(), MainActivity.class));
     }
     /* END TEST */
 
@@ -66,7 +63,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public View setViewForPosition(int position) {
-            View customView = getLayoutInflater().inflate(R.layout.view_custom, null);
+            @SuppressLint("InflateParams") View customView = getLayoutInflater().inflate(R.layout.view_custom, null);
             //set view attributes here
             TextView text = (TextView) customView.findViewById(R.id.textView);
             ImageView image = (ImageView) customView.findViewById(R.id.imageView);
@@ -92,7 +89,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         // TODO: Use the ViewModel
     }
 

@@ -22,8 +22,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.yikes.park.CL.SkatePark;
 import com.yikes.park.R;
-
 import java.util.ArrayList;
+import com.google.maps.android.data.geojson.GeoJsonLayer;
+import org.json.JSONObject;
+
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
@@ -41,6 +43,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // http://geojson.io/
+        // https://github.com/googlemaps/android-maps-utils
+
+        GeoJsonLayer test;
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
@@ -49,6 +56,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
         return rootView;
     }
+
+
 
 
     @Override

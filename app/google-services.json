@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "357211955056",
+    "project_id": "mapyikes",
+    "storage_bucket": "mapyikes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:357211955056:android:6b85c2a380a4cdeeebf9b5",
+        "android_client_info": {
+          "package_name": "com.yikes.park"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "357211955056-pg5ndrc1o7qht0ptg535akdld5evhv2r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkUbxgES2u_R8SVmiJ5clwzXWAVBzMW0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "357211955056-pg5ndrc1o7qht0ptg535akdld5evhv2r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

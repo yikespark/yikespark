@@ -13,6 +13,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -66,11 +67,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
         db = FirebaseDatabase.getInstance().getReference().child("skateParks");
 
-//        SkatePark skatePark = new SkatePark("favencia",41.443010789187205, 2.1714888401371972);
-//        SkatePark skatePark2 = new SkatePark("Zona franca",41.356810315073126, 2.1411484268477743);
-//        SkateParks.add(skatePark);
-//        SkateParks.add(skatePark2);
-//        db.setValue(SkateParks);
+
+        SkatePark skatePark = new SkatePark("favencia",41.443010789187205, 2.1714888401371972);
+        SkatePark skatePark2 = new SkatePark("Zona franca",41.356810315073126, 2.1411484268477743);
+        SkateParks.add(skatePark);
+        SkateParks.add(skatePark2);
+        db.setValue(SkateParks);
 
 
         db.addValueEventListener(new ValueEventListener() {
@@ -85,8 +87,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     SkateParks.add(skatePark);
 //                    Log.i("logTest",skatePark.getParkName());
                     LatLng park = new LatLng(skatePark.getParkLat(), skatePark.getParkLong());
-                    mMap.addMarker(new MarkerOptions().position(park).title("Marker in Skate Park "+ skatePark.getParkName()));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(park));
+                   // LatLng park = new LatLng(41.4035806, 2.17428);
+
+                    mMap.addMarker(new MarkerOptions().position(park).title("Marker in Skate Park "+ skatePark.getParkName()).icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot))));
+                    //mMap.moveCamera(CameraUpdateFactory.newLatLng(park));
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(park, 15.3432f));
                 }
             }
 

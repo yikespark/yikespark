@@ -4,16 +4,22 @@ public class SkatePark {
     public String parkName;
     public double parkLat;
     public double parkLong;
+    public String parkType;
 
     public SkatePark(){
 
     }
 
-    public SkatePark(String parkName, double parkLat, double parkLong) {
+    public SkatePark(String parkName, double parkLat, double parkLong, String parkType) {
         this.parkName = parkName;
         this.parkLat = parkLat;
         this.parkLong = parkLong;
+        this.parkType = parkType;
     }
+
+    public String getParkType() { return parkType; }
+
+    public void setParkType(String parkType) { this.parkType = parkType; }
 
     public String getParkName() {
         return parkName;

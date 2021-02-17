@@ -66,11 +66,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mMap = googleMap;
         db = FirebaseDatabase.getInstance().getReference().child("skateParks");
 
-//        SkatePark skatePark = new SkatePark("favencia",41.443010789187205, 2.1714888401371972);
+        SkatePark skatePark = new SkatePark("Favencia",41.443010789187205, 2.1714888401371972, "rampa");
 //        SkatePark skatePark2 = new SkatePark("Zona franca",41.356810315073126, 2.1411484268477743);
 //        SkateParks.add(skatePark);
-//        SkateParks.add(skatePark2);
-//        db.setValue(SkateParks);
+        SkateParks.add(skatePark);
+        db.setValue(SkateParks);
 
 
         db.addValueEventListener(new ValueEventListener() {
@@ -88,6 +88,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     mMap.addMarker(new MarkerOptions().position(park).title("Marker in Skate Park "+ skatePark.getParkName()));
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(park));
                 }
+                db.setValue(SkateParks);
             }
 
             @Override

@@ -122,11 +122,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
                             firstime[0] = false;
                         }
-                        if (markerName[0] !=null) {
+                        if (markerName[0] != null) {
                             markerName[0].remove();
-                            markerName[0] =null;
+                            markerName[0] = null;
                         }
-                        if (markerName[0] ==null) {
+                        if (markerName[0] == null) {
                             markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.hotspot))));
                         }
 

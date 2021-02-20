@@ -76,8 +76,7 @@ public class LoginActivity extends AppCompatActivity {
             TextView text = (TextView) customView.findViewById(R.id.textView);
             ImageView image = (ImageView) customView.findViewById(R.id.imageView);
 
-            switch (position)
-            {
+            switch (position) {
                 case 0:
                     image.setImageResource(R.drawable.image0);
                     text.setText("wowowowowowoowowowowowowowowowowowowowowowow");

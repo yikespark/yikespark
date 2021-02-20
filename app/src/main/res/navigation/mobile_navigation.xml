@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_add"
-        android:name="com.yikes.park.menus.map.MapsFragment"
+        android:name="com.yikes.park.menu.map.MapsFragment"
         android:label="@string/btnMap"
         tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/navigation_list"
-        android:name="com.yikes.park.menus.profile.ListFragment"
+        android:name="com.yikes.park.menu.profile.ProfileFragment"
         android:label="@string/btnProfile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_preferences"
-        android:name="com.yikes.park.menus.settings.PreferencesFragment"
+        android:name="com.yikes.park.menu.settings.PreferencesFragment"
         android:label="@string/btnSettings"
         tools:layout="@layout/fragment_settings" />
 

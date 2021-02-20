@@ -1,4 +1,4 @@
-package com.yikes.park.menus;
+package com.yikes.park.menu;
 
 import android.os.Bundle;
 

@@ -1,4 +1,4 @@
-package com.yikes.park.menus.settings;
+package com.yikes.park.menu.settings;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -14,7 +14,7 @@ import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
-import com.yikes.park.MainActivity;
+import com.yikes.park.LoginActivity;
 import com.yikes.park.R;
 
 import java.util.Locale;
@@ -68,7 +68,7 @@ public class PreferencesFragment extends Fragment {
         Configuration conf = res.getConfiguration();
         conf.locale = myLocale;
         res.updateConfiguration(conf, dm);
-        Intent refresh = new Intent(getContext(), MainActivity.class);
+        Intent refresh = new Intent(getContext(), LoginActivity.class);
         requireActivity().finish();
         startActivity(refresh);
     }

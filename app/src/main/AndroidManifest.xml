@@ -36,9 +36,9 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".menus.MainActivity"
+            android:name=".menu.MainActivity"
             android:label="ui"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoginActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

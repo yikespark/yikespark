@@ -1,63 +1,71 @@
-package com.yikes.park.ui.login;
+package com.yikes.park;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
-import com.yikes.park.R;
-import com.yikes.park.menus.MainActivity;
 
-public class MainFragment extends Fragment {
+
+public class LoginActivity extends AppCompatActivity {
 
     CarouselView customCarouselView;
     int NUMBER_OF_PAGES = 2;
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
-    }
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View root = inflater.inflate(R.layout.main_fragment, container, false);
+        setContentView(R.layout.login_activity);
 
-        customCarouselView = (CarouselView) root.findViewById(R.id.customCarouselView);
+        customCarouselView = (CarouselView) findViewById(R.id.customCarouselView);
         customCarouselView.setPageCount(NUMBER_OF_PAGES);
         customCarouselView.setViewListener(viewListener);
 
-        /* TESTING BUTTON */
-        Button btn_google = root.findViewById(R.id.button4);
+        Button btn_google = findViewById(R.id.button4);
         btn_google.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToGoogleMaps();
             }
         });
+
         /* END TEST */
 
 
-        return root;
+
+
+
+        /* OLD STUFF
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, MainFragment.newInstance())
+                    .commitNow();
+        }*/
+
     }
 
-    /* TESTING METHOD */
     public void goToGoogleMaps() {
-        startActivity(new Intent(getContext(), MainActivity.class));
-    }
-    /* END TEST */
+        Toast.makeText(this,"¡Te has conectado con éxito!", Toast.LENGTH_LONG).show();
 
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Titulo");
+        builder.setMessage("Mensaje");
+        builder.setPositiveButton("Aceptar", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();*/
+
+        startActivity(new Intent(this, com.yikes.park.menu.MainActivity.class));
+    }
 
     ViewListener viewListener = new ViewListener() {
 
@@ -85,11 +93,5 @@ public class MainFragment extends Fragment {
             return customView;
         }
     };
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        // TODO: Use the ViewModel
-    }
 
 }

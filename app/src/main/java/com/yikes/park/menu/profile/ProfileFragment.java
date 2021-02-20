@@ -1,4 +1,4 @@
-package com.yikes.park.menus.profile;
+package com.yikes.park.menu.profile;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment;
 
 import com.yikes.park.R;
 
-public class ListFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
     SQLiteDatabase db;
 
-    public ListFragment() {
+    public ProfileFragment() {
         // Required empty public constructor
     }
 

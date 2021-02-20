@@ -1,4 +1,4 @@
-package com.yikes.park.CL;
+package com.yikes.park.menu.map.coords;
 
 public class SkatePark {
     public String parkName;

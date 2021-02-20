@@ -7,13 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="google"
-        app:layout_constraintBottom_toBottomOf="@+id/customCarouselView" />
-
     <com.synnapps.carouselview.CarouselView
         android:id="@+id/customCarouselView"
         android:layout_width="match_parent"
@@ -42,6 +35,14 @@
         android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/button4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="google"
+        app:layout_constraintBottom_toBottomOf="@+id/customCarouselView"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

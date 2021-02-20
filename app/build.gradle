@@ -39,10 +39,19 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+
+
+
+    /* GOOGLE AUTH */
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
+
+
+    /* GOOGLE MAPS */
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    // Utilities for Maps SDK for Android (requires Google Play Services)
     //implementation 'com.google.maps.android:android-maps-utils:2.2.0'
-    // Alternately - Utilities for Maps SDK v3 BETA for Android (does not require Google Play Services)
     implementation 'com.google.maps.android:android-maps-utils-v3:2.2.0'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'

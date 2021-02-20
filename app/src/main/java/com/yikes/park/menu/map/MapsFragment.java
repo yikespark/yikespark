@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.yikes.park.menu.map.coords.SkatePark;
+import com.yikes.park.menu.map.coords.YikeSpot;
 import com.yikes.park.R;
 import java.util.ArrayList;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
@@ -41,14 +42,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     private LocationManager locationManager;
 
-
-    DatabaseReference db;
+    DatabaseReference dbPark;
+    DatabaseReference dbSpot;
     protected ArrayList<SkatePark> SkateParks;
+    protected ArrayList<YikeSpot> YikeSpots;
 
     public MapsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,24 +69,46 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         return rootView;
     }
 
-
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         final Marker[] markerName = {null};
         final Boolean[] firstime = {true};
         SkateParks = new ArrayList<SkatePark>();
+        YikeSpots = new ArrayList<YikeSpot>();
         mMap = googleMap;
-        db = FirebaseDatabase.getInstance().getReference().child("skateParks");
+        dbPark = FirebaseDatabase.getInstance().getReference().child("skateParks");
+        dbSpot = FirebaseDatabase.getInstance().getReference().child("yikeSpots");
 
-//        SkatePark skatePark = new SkatePark("Favencia",41.443010789187205, 2.1714888401371972, "hotspot");
-//        SkatePark skatePark2 = new SkatePark("Zona franca",41.356810315073126, 2.1411484268477743,"marker_ramp");
-//        SkateParks.add(skatePark);
-//        SkateParks.add(skatePark2);
-//        db.setValue(SkateParks);
+        // START Get my current location
+        locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-        db.addValueEventListener(new ValueEventListener() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                if (firstime[0] == true){
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
+                    firstime[0] = false;
+                }
+                if (markerName[0] != null) {
+                    markerName[0].remove();
+                    markerName[0] = null;
+                }
+                if (markerName[0] == null) {
+                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.hotspot))));
+                }
+
+            }
+        });
+        // END Get my current location
+
+        ////////////////////// Firebase Skateparks //////////////////////
+        dbPark.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Log.i("logTest ", ""+dataSnapshot.getChildrenCount());
@@ -95,44 +118,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
                     SkatePark skatePark = postSnapshot.getValue(SkatePark.class);
                     SkateParks.add(skatePark);
-//                    Log.i("logTest",skatePark.getParkName());
                     LatLng park = new LatLng(skatePark.getParkLat(), skatePark.getParkLong());
 
                     int markerIcon = getResources().getIdentifier(skatePark.getParkType(), "drawable", getActivity().getPackageName());
-                    mMap.addMarker(new MarkerOptions().position(park).title("Marker in Skate Park "+ skatePark.getParkName()).icon((BitmapDescriptorFactory.fromResource(markerIcon))));
-
-                    //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(park, 15.3432f));
+                    mMap.addMarker(new MarkerOptions().position(park).title("Skate Park "+ skatePark.getParkName()).icon((BitmapDescriptorFactory.fromResource(markerIcon))));
 
                 }
-                db.setValue(SkateParks);
+                dbPark.setValue(SkateParks);
+            }
 
-                // START Get my current location
-                locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.i("logTest", "EFailed to read value.", error.toException());
+            }
+        });
 
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        ////////////////////// Firebase YikeSpots //////////////////////
+        dbSpot.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i("logTest ", ""+dataSnapshot.getChildrenCount());
+
+                YikeSpots.clear();
+
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                    YikeSpot yikeSpot = postSnapshot.getValue(YikeSpot.class);
+                    YikeSpots.add(yikeSpot);
+                    LatLng spot = new LatLng(yikeSpot.getSpotLat(), yikeSpot.getSpotLong());
+                    mMap.addMarker(new MarkerOptions().position(spot).title("YikeSpot "+ yikeSpot.getSpotName()).icon((BitmapDescriptorFactory.fromResource(R.drawable.hotspot))));
+
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-                        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-
-                        if (firstime[0] == true){
-                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
-                            firstime[0] = false;
-                        }
-                        if (markerName[0] != null) {
-                            markerName[0].remove();
-                            markerName[0] = null;
-                        }
-                        if (markerName[0] == null) {
-                            markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.hotspot))));
-                        }
-
-                    }
-                });
-                // END Get my current location
+                dbSpot.setValue(YikeSpots);
             }
 
             @Override

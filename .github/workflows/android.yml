@@ -14,15 +14,23 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Make Gradle executable
-      run: chmod +x ./gradlew
+    
     - name: Build with Gradle
-      run: ./gradlew build
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
-    - name: Releasing using Hub
-      uses: ShaunLWM/action-release-debugapk@master
-      env:
-       GITHUB_TOKEN: ${{ secrets.TOKEN }}
-       APP_FOLDER: app
-       RELEASE_TITLE: New Build
+      run: |
+        if [[ -n "${{ secrets.KEYSTORE_BASE64 }}" ]]; then
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+          export KEYSTORE_PASSWORD="${{ secrets.KEYSTORE_PASSWORD }}"
+          export KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
+          export KEY_PASSWORD="${{ secrets.KEY_PASSWORD }}"
+        fi
+        ./gradlew assembleRelease
+    - name: Get apk path
+      id: apk-path
+      run: |
+        path=$(find **/build/outputs/apk -name '*.apk' -type f | head -1)
+        echo "::set-output name=path::$path"
+    - name: Upload apk file
+      uses: actions/upload-artifact@v1
+      with:
+        name: apk
+        path: ${{ steps.apk-path.outputs.path }}

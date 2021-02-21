@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "357211955056",
+    "firebase_url": "https://mapyikes-default-rtdb.firebaseio.com",
     "project_id": "mapyikes",
     "storage_bucket": "mapyikes.appspot.com"
   },
@@ -13,6 +14,22 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "357211955056-i0oi3fgbn91fthjdf756g8ack8nn5tgp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yikes.park",
+            "certificate_hash": "28c020ec20283cfd9e3091dde3ac5a568230a8d3"
+          }
+        },
+        {
+          "client_id": "357211955056-qpkj82lflngnp0ke0ko5js8sia36avf1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yikes.park",
+            "certificate_hash": "8d6f502a476781afb371773bc0b08ab855bba060"
+          }
+        },
         {
           "client_id": "357211955056-pg5ndrc1o7qht0ptg535akdld5evhv2r.apps.googleusercontent.com",
           "client_type": 3
@@ -27,7 +44,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "357211955056-pg5ndrc1o7qht0ptg535akdld5evhv2r.apps.googleusercontent.com",
+              "client_id": "357211955056-2ju58fr2hhms90os7j5agfdepdgu589u.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

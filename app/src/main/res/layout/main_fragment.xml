@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.login.MainFragment">
+    android:fitsSystemWindows="true"
+    tools:context=".menu.MainActivity">
 
     <Button
         android:id="@+id/button4"

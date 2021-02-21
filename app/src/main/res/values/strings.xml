@@ -6,10 +6,15 @@
     <string name="btnSettings">Settings</string>
     <string name="txtSave">Save</string>
     <string name="Language">Language</string>
+    <string name="image0">Discover, share and have fun with the new application by and for skaters</string>
+    <string name="image1">Share knowledge and learn with people with the same tastes</string>
+    <string name="image2">Discover and add spots to enjoy your hobbies</string>
+    <string name="image3">Share the specifications of your skates, scooters, bicycles and more in your profile</string>
     <string name="server_client_id">357211955056-2ju58fr2hhms90os7j5agfdepdgu589u.apps.googleusercontent.com</string>
-
     <string-array name="Languages">
         <item>English</item>
         <item>Spanish</item>
     </string-array>
+    <string name="map_id">874d74e7c8174993</string>
+
 </resources>

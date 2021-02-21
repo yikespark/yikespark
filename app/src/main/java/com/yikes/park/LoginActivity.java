@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,13 +26,17 @@ import com.yikes.park.menu.MainActivity;
 public class LoginActivity extends AppCompatActivity {
 
     CarouselView customCarouselView;
-    int NUMBER_OF_PAGES = 2;
+    int NUMBER_OF_PAGES = 4;
     private static int RC_SIGN_IN = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
+
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         /* GOOGLE AUTH */
         SignInButton signInButton = findViewById(R.id.button4);
@@ -46,18 +49,13 @@ public class LoginActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.button4:
-                        signIn(mGoogleSignInClient);
-                        break;
+                if (v.getId() == R.id.button4) {
+                    signIn(mGoogleSignInClient);
                 }
             }
         });
 
-
         /* END GOOGLE AUTH */
-
-
 
         customCarouselView = (CarouselView) findViewById(R.id.customCarouselView);
         customCarouselView.setPageCount(NUMBER_OF_PAGES);
@@ -86,12 +84,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void goToGoogleMaps() {
-        Toast.makeText(this,"¡Te has conectado con éxito!", Toast.LENGTH_LONG).show();
-
-        startActivity(new Intent(this, com.yikes.park.menu.MainActivity.class));
-    }
-
     ViewListener viewListener = new ViewListener() {
 
         @Override
@@ -101,19 +93,27 @@ public class LoginActivity extends AppCompatActivity {
             TextView text = (TextView) customView.findViewById(R.id.textView);
             ImageView image = (ImageView) customView.findViewById(R.id.imageView);
 
-            switch (position) {
-                case 0:
-                    image.setImageResource(R.drawable.image0);
-                    text.setText("wowowowowowoowowowowowowowowowowowowowowowow");
-                    break;
-                case 1:
-                    image.setImageResource(R.drawable.image2);
-                    text.setText("SDFKLJSDFGLKSDJFHKLSDJFHSDKLFHKLSDJFLDFSDFSD");
-                    break;
-                default:
-                    image.setImageResource(R.drawable.image0);
-                    break;
-            }
+            switch (position){
+                    case 0:
+                        image.setImageResource(R.drawable.image0);
+                        text.setText(R.string.image0);
+                        break;
+                    case 1:
+                        image.setImageResource(R.drawable.image1);
+                        text.setText(R.string.image1);
+                        break;
+                    case 2:
+                        image.setImageResource(R.drawable.image2);
+                        text.setText(R.string.image2);
+                        break;
+                    case 3:
+                        image.setImageResource(R.drawable.image3);
+                        text.setText(R.string.image3);
+                        break;
+                    default:
+                        image.setImageResource(R.drawable.image0);
+                        break;
+                }
             return customView;
         }
     };
@@ -165,7 +165,4 @@ public class LoginActivity extends AppCompatActivity {
             updateUI(null);
         }
     }
-
-
-
 }

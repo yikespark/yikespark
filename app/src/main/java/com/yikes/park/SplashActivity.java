@@ -29,7 +29,6 @@ public class SplashActivity extends AppCompatActivity {
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         Intent loginActivityIntent = new Intent(this, LoginActivity.class);
 
-
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -42,5 +41,4 @@ public class SplashActivity extends AppCompatActivity {
         },50);
 
     }
-
 }

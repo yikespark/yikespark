@@ -25,7 +25,6 @@ import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 import com.yikes.park.menu.MainActivity;
 
-/* F5:3B:6F:D1:EE:11:62:BD:41:03:43:F3:0F:93:F2:5B:3E:B1:57:74 */
 public class LoginActivity extends AppCompatActivity {
 
     CarouselView customCarouselView;
@@ -35,11 +34,13 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_activity);
+        setContentView(R.layout.activity_login);
 
+        customCarouselView = findViewById(R.id.customCarouselView);
+        customCarouselView.setPageCount(NUMBER_OF_PAGES);
+        customCarouselView.setViewListener(viewListener);
 
-
-        /* GOOGLE AUTH */
+        /** Google Sign-in related configuration */
         SignInButton signInButton = findViewById(R.id.button4);
         // Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -56,33 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        /* END GOOGLE AUTH */
-
-        customCarouselView = findViewById(R.id.customCarouselView);
-        customCarouselView.setPageCount(NUMBER_OF_PAGES);
-        customCarouselView.setViewListener(viewListener);
-
-        /*Button btn_google = findViewById(R.id.button4);
-        btn_google.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToGoogleMaps();
-            }
-        });*/
-
-        /* END TEST */
-
-
-
-
-
-        /* OLD STUFF
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
-                    .commitNow();
-        }*/
-
+        /** Ask for location permissions before getting into the map */
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -92,13 +67,11 @@ public class LoginActivity extends AppCompatActivity {
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
         }
-
     }
-
     ViewListener viewListener = new ViewListener() {
 
+        /** Image carousel on login screen */
         @Override
         public View setViewForPosition(int position) {
             @SuppressLint("InflateParams") View customView = getLayoutInflater().inflate(R.layout.view_custom, null);
@@ -106,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
             TextView text = customView.findViewById(R.id.textView);
             ImageView image = customView.findViewById(R.id.imageView);
 
-            switch (position){
+            switch (position) {
                     case 0:
                         image.setImageResource(R.drawable.image0);
                         text.setText(R.string.image0);
@@ -129,8 +102,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             return customView;
         }
-
-
     };
 
     @Override
@@ -142,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUI(GoogleSignInAccount account) {
+        // Updates the screen when login-in with Google
         if (account != null){
             Toast.makeText(this,"¡Te has conectado con éxito!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, MainActivity.class));
@@ -161,8 +133,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
+            // The Task returned from this call is always completed, no need to attach a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
@@ -174,8 +145,7 @@ public class LoginActivity extends AppCompatActivity {
             // Signed in successfully, show authenticated UI.
             updateUI(account);
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+            // The ApiException status code indicates the detailed failure reason. Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w("G SIGN:", "signInResult:failed code=" + e.getStatusCode());
             updateUI(null);
         }

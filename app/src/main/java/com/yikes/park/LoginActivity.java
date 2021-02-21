@@ -119,10 +119,10 @@ public class LoginActivity extends AppCompatActivity {
     private void updateUI(GoogleSignInAccount account) {
         // Updates the screen when login-in with Google
         if (account != null){
-            Toast.makeText(this,"¡Te has conectado con éxito!", Toast.LENGTH_LONG).show();
+            // Toast.makeText(this,"¡Te has conectado con éxito!", Toast.LENGTH_LONG).show();
             startActivity(new Intent(this, MainActivity.class));
         } else {
-            Toast.makeText(this,"¡Error al intentar conectarte!", Toast.LENGTH_LONG).show();
+            // Toast.makeText(this,"¡Error al intentar conectarte!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -135,7 +135,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             // The Task returned from this call is always completed, no need to attach a listener.

@@ -27,16 +27,12 @@ public class LoginActivity extends AppCompatActivity {
 
     CarouselView customCarouselView;
     int NUMBER_OF_PAGES = 4;
-    private static int RC_SIGN_IN = 1;
+    private static final int RC_SIGN_IN = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
-
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         /* GOOGLE AUTH */
         SignInButton signInButton = findViewById(R.id.button4);
@@ -57,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
         /* END GOOGLE AUTH */
 
-        customCarouselView = (CarouselView) findViewById(R.id.customCarouselView);
+        customCarouselView = findViewById(R.id.customCarouselView);
         customCarouselView.setPageCount(NUMBER_OF_PAGES);
         customCarouselView.setViewListener(viewListener);
 
@@ -90,8 +86,8 @@ public class LoginActivity extends AppCompatActivity {
         public View setViewForPosition(int position) {
             @SuppressLint("InflateParams") View customView = getLayoutInflater().inflate(R.layout.view_custom, null);
             //set view attributes here
-            TextView text = (TextView) customView.findViewById(R.id.textView);
-            ImageView image = (ImageView) customView.findViewById(R.id.imageView);
+            TextView text = customView.findViewById(R.id.textView);
+            ImageView image = customView.findViewById(R.id.imageView);
 
             switch (position){
                     case 0:

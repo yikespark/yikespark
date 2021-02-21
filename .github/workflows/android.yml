@@ -14,19 +14,17 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    
-    - name: add keystore from base64
-      run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
-    - name: keystore pass
-      run: export KEYSTORE_PASSWORD="${{ secrets.KEYSTORE_PASSWORD }}"
-    - name: key alias
-      run: export KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
-    - name: key pass
-      run: export KEY_PASSWORD="${{ secrets.KEY_PASSWORD }}"
     - name: Make Gradle executable
       run: chmod +x ./gradlew
-    - name: run gradlew
-      run: ./gradlew assembleRelease
+    - name: Build with Gradle
+      run: |
+        if [[ -n "${{ secrets.KEYSTORE_BASE64 }}" ]]; then
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+          export KEYSTORE_PASSWORD="${{ secrets.KEYSTORE_PASSWORD }}"
+          export KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
+          export KEY_PASSWORD="${{ secrets.KEY_PASSWORD }}"
+        fi
+        ./gradlew assembleRelease
     - name: Get apk path
       id: apk-path
       run: |

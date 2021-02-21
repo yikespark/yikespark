@@ -31,9 +31,14 @@ import com.yikes.park.R;
 import com.yikes.park.menu.MainActivity;
 
 import java.util.Locale;
+import java.util.concurrent.Executor;
 
 
 public class PreferencesFragment extends Fragment {
+
+    FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
+    private GoogleSignInOptions gso;
 
     public PreferencesFragment() {
         // Required empty public constructor
@@ -45,13 +50,22 @@ public class PreferencesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        /** Getting current Google Auth logged user */
+        mAuth = FirebaseAuth.getInstance();
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+        mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+
+        /*
         GoogleSignInOptions gso = new
                 GoogleSignInOptions.
                         Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+        */
 
 
         AutoCompleteTextView dropDownText = rootView.findViewById(R.id.dropdown_text);
@@ -81,10 +95,10 @@ public class PreferencesFragment extends Fragment {
         });
 
 
-        final Button logout = rootView.findViewById(R.id.btnLogout);
-        logout.setBackgroundColor(Color.RED);
+        final Button logoutbtn = rootView.findViewById(R.id.btnLogout);
+        logoutbtn.setBackgroundColor(Color.RED);
 
-        logout.setOnClickListener(new View.OnClickListener() {
+        logoutbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -94,20 +108,18 @@ public class PreferencesFragment extends Fragment {
 
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        signOut(mGoogleSignInClient);
+                        signOut();
                         dialog.dismiss();
                     }
                 });
 
                 builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Nothing else happens
                         dialog.dismiss();
                     }
                 });
-
                 AlertDialog alert = builder.create();
                 alert.show();
 
@@ -129,8 +141,12 @@ public class PreferencesFragment extends Fragment {
         startActivity(refresh);
     }
 
-    /** Google Auth Log Out */
-    private void signOut(GoogleSignInClient mGoogleSignInClient) {
+
+    private void signOut() {
+        // Sign out from Firebase Auth
+        mAuth.signOut();
+
+        // Sign out from Google Auth -> The user has to choose an e-mail account again
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>
                         () {
@@ -140,7 +156,6 @@ public class PreferencesFragment extends Fragment {
                     }
                 });
     }
-
 
     @Override
     public void onDestroyView() {

@@ -40,4 +40,15 @@
         app:iconPadding="-32dp"
         tools:ignore="HardcodedText" />
 
+    <Button
+        android:id="@+id/btnLogout"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Logout"
+        app:icon="@drawable/ic_save_24px"
+        app:iconPadding="-32dp"
+        tools:ignore="HardcodedText" />
+
 </LinearLayout>

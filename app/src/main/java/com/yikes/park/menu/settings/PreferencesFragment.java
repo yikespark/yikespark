@@ -43,7 +43,7 @@ public class PreferencesFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View addIncidencia = inflater.inflate(R.layout.fragment_settings, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         /** Getting current Google Auth logged user */
         GoogleSignInOptions gso = new
@@ -54,19 +54,19 @@ public class PreferencesFragment extends Fragment {
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
 
-        AutoCompleteTextView dropDownText = addIncidencia.findViewById(R.id.dropdown_text);
+        AutoCompleteTextView dropDownText = rootView.findViewById(R.id.dropdown_text);
         String[ ] labelsIdiomas;
         Resources res1 = getResources();
         labelsIdiomas = res1.getStringArray( R.array.Languages );
 
         ArrayAdapter<String> adapterLanguages = new ArrayAdapter<>(
-                addIncidencia.getContext(),
+                rootView.getContext(),
                 R.layout.dropdown_item,
                 labelsIdiomas
         );
         dropDownText.setAdapter(adapterLanguages);
 
-        final Button btn = addIncidencia.findViewById(R.id.btnSave);
+        final Button btn = rootView.findViewById(R.id.btnSave);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +81,7 @@ public class PreferencesFragment extends Fragment {
         });
 
 
-        final Button logout = addIncidencia.findViewById(R.id.btnLogout);
+        final Button logout = rootView.findViewById(R.id.btnLogout);
         logout.setBackgroundColor(Color.RED);
 
         logout.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +114,7 @@ public class PreferencesFragment extends Fragment {
             }
         });
 
-        return addIncidencia;
+        return rootView;
     }
 
     public void setLocale(String lang) {

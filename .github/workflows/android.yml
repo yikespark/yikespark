@@ -35,3 +35,9 @@ jobs:
       with:
         name: apk
         path: ${{ steps.apk-path.outputs.path }}
+    - name: Releasing using Hub
+      uses: ShaunLWM/action-release-debugapk@master
+      env:
+       GITHUB_TOKEN: ${{ secrets.TOKEN }}
+       APP_FOLDER: app
+       RELEASE_TITLE: New Build

@@ -15,19 +15,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "357211955056-51dvuoqjikl9fv0rf21p3uecmrmtg3a6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yikes.park",
+            "certificate_hash": "6cb5e0cd8e990dfc4a3e8eaca804f7537afe6fa7"
+          }
+        },
+        {
+          "client_id": "357211955056-dit4s7v1sag5ut40nhti6lo8b0ggrlm6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yikes.park",
+            "certificate_hash": "8d6f502a476781afb371773bc0b08ab855bba060"
+          }
+        },
+        {
           "client_id": "357211955056-i0oi3fgbn91fthjdf756g8ack8nn5tgp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.yikes.park",
             "certificate_hash": "28c020ec20283cfd9e3091dde3ac5a568230a8d3"
-          }
-        },
-        {
-          "client_id": "357211955056-qpkj82lflngnp0ke0ko5js8sia36avf1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.yikes.park",
-            "certificate_hash": "8d6f502a476781afb371773bc0b08ab855bba060"
           }
         },
         {

@@ -16,8 +16,6 @@ import com.yikes.park.menu.settings.PreferencesFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    //private ActivityMainBinding binding;
-
     final Fragment fragment1 = new MapsFragment();
     final Fragment fragment2 = new ProfileFragment();
     final Fragment fragment3 = new PreferencesFragment();
@@ -27,23 +25,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_main);
-
-
         BottomNavigationView navView = findViewById(R.id.nav_view);
-
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fm.beginTransaction().add(R.id.main_container, fragment3, "3").hide(fragment3).commit();
         fm.beginTransaction().add(R.id.main_container, fragment2, "2").hide(fragment2).commit();
         fm.beginTransaction().add(R.id.main_container,fragment1, "1").commit();
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        //AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_add, R.id.navigation_list, R.id.navigation_preferences).build();
-        //NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        //NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

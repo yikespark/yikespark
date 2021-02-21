@@ -23,6 +23,8 @@ jobs:
       run: export KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
     - name: key pass
       run: export KEY_PASSWORD="${{ secrets.KEY_PASSWORD }}"
+    - name: Make Gradle executable
+      run: chmod +x ./gradlew
     - name: run gradlew
       run: ./gradlew assembleRelease
     - name: Get apk path

@@ -31,13 +31,13 @@ import com.google.android.libraries.maps.model.LatLng;
 import com.google.android.libraries.maps.model.MapStyleOptions;
 import com.google.android.libraries.maps.model.Marker;
 import com.google.android.libraries.maps.model.MarkerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.yikes.park.R;
 import com.yikes.park.menu.map.coords.SkatePark;
 import com.yikes.park.menu.map.coords.YikeSpot;
@@ -80,7 +80,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             view.setLayoutParams(params);
             snack.show();
         }
+        FloatingActionButton button = (FloatingActionButton) rootView.findViewById(R.id.plus);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNewActivity();
+            }
+        });
         return rootView;
+    }
+
+    public void openNewActivity(){
+        Intent intent = new Intent(getContext(), spot.class);
+        startActivity(intent);
     }
 
     public class gpsActivation implements View.OnClickListener {

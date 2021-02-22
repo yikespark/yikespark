@@ -35,7 +35,7 @@ public class ProfileFragment extends Fragment {
         // Gets the id
         TextView txt1 = rootView.findViewById(R.id.profile_field1);
         if (user != null) {
-            txt1.setText(user.getUid());
+            txt1.setText(user.getDisplayName());
         } else {
             txt1.setVisibility(View.GONE);
         }

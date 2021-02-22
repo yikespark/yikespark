@@ -1,12 +1,16 @@
 package com.yikes.park.menu.settings;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +20,9 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -66,6 +72,7 @@ public class PreferencesFragment extends Fragment {
         );
         dropDownText.setAdapter(adapterLanguages);
 
+        /** Languages Config */
         final Button btn_save = rootView.findViewById(R.id.settings_save_btn);
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +88,7 @@ public class PreferencesFragment extends Fragment {
         });
 
 
+        /** Sing out */
         final Button btn_logout = rootView.findViewById(R.id.settings_logout_btn);
         btn_logout.setBackgroundColor(Color.RED);
 

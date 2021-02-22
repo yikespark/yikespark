@@ -8,15 +8,8 @@
     android:fitsSystemWindows="true"
     tools:context=".menu.MainActivity">
 
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="google"
-        app:layout_constraintBottom_toBottomOf="@+id/customCarouselView" />
-
     <com.synnapps.carouselview.CarouselView
-        android:id="@+id/customCarouselView"
+        android:id="@+id/login_carousel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:fillColor="#FFFFFFFF"
@@ -33,7 +26,7 @@
     </com.synnapps.carouselview.CarouselView>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/login_header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"

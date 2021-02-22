@@ -2,8 +2,6 @@ package com.yikes.park;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -11,10 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -26,11 +22,9 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
@@ -38,24 +32,24 @@ import com.yikes.park.menu.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private final int NUMBER_OF_PAGES = 4;
+    private static final int RC_SIGN_IN = 666;
+
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
-    private static final int RC_SIGN_IN = 1;
-
-    CarouselView customCarouselView;
-    int NUMBER_OF_PAGES = 4;
+    private CarouselView customCarouselView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        customCarouselView = findViewById(R.id.customCarouselView);
+        customCarouselView = findViewById(R.id.login_carousel);
         customCarouselView.setPageCount(NUMBER_OF_PAGES);
         customCarouselView.setViewListener(viewListener);
 
         /** Google Sign-in related configuration */
-        SignInButton signInButton = findViewById(R.id.button4);
+        SignInButton login_btn = findViewById(R.id.login_google_btn);
         // Configure sign-in to request the user's ID, email address, and basic profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -63,13 +57,13 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Firebase Auth Intance
+        // Firebase Auth Instance
         mAuth = FirebaseAuth.getInstance();
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v.getId() == R.id.button4) {
+                if (v.getId() == R.id.login_google_btn) {
                     signIn();
                 }
             }
@@ -87,28 +81,28 @@ public class LoginActivity extends AppCompatActivity {
         public View setViewForPosition(int position) {
             @SuppressLint("InflateParams") View customView = getLayoutInflater().inflate(R.layout.view_custom, null);
             // Set view attributes here
-            TextView text = customView.findViewById(R.id.textView);
-            ImageView image = customView.findViewById(R.id.imageView);
+            TextView text = customView.findViewById(R.id.login_desc_text);
+            ImageView image = customView.findViewById(R.id.login_background_image);
 
             switch (position) {
                     case 0:
-                        image.setImageResource(R.drawable.image0);
+                        image.setImageResource(R.drawable.login_image0);
                         text.setText(R.string.image0);
                         break;
                     case 1:
-                        image.setImageResource(R.drawable.image1);
+                        image.setImageResource(R.drawable.login_image1);
                         text.setText(R.string.image1);
                         break;
                     case 2:
-                        image.setImageResource(R.drawable.image2);
+                        image.setImageResource(R.drawable.login_image2);
                         text.setText(R.string.image2);
                         break;
                     case 3:
-                        image.setImageResource(R.drawable.image3);
+                        image.setImageResource(R.drawable.login_image3);
                         text.setText(R.string.image3);
                         break;
                     default:
-                        image.setImageResource(R.drawable.image0);
+                        image.setImageResource(R.drawable.login_image0);
                         break;
                 }
             return customView;

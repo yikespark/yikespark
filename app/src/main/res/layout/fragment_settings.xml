@@ -30,7 +30,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnSave"
+        android:id="@+id/settings_save_btn"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,13 +41,13 @@
         tools:ignore="HardcodedText" />
 
     <Button
-        android:id="@+id/btnLogout"
+        android:id="@+id/settings_logout_btn"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Logout"
-        app:icon="@drawable/ic_save_24px"
+        app:icon="@drawable/ic_logout_24px"
         app:iconPadding="-32dp"
         tools:ignore="HardcodedText" />
 

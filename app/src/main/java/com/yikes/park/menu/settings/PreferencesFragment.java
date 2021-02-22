@@ -1,6 +1,5 @@
 package com.yikes.park.menu.settings;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,10 +26,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.yikes.park.LoginActivity;
 import com.yikes.park.R;
-import com.yikes.park.menu.MainActivity;
 
 import java.util.Locale;
-import java.util.concurrent.Executor;
 
 
 public class PreferencesFragment extends Fragment {
@@ -58,16 +54,6 @@ public class PreferencesFragment extends Fragment {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
 
-        /*
-        GoogleSignInOptions gso = new
-                GoogleSignInOptions.
-                        Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
-        */
-
-
         AutoCompleteTextView dropDownText = rootView.findViewById(R.id.dropdown_text);
         String[ ] labelsIdiomas;
         Resources res1 = getResources();
@@ -80,8 +66,8 @@ public class PreferencesFragment extends Fragment {
         );
         dropDownText.setAdapter(adapterLanguages);
 
-        final Button btn = rootView.findViewById(R.id.btnSave);
-        btn.setOnClickListener(new View.OnClickListener() {
+        final Button btn_save = rootView.findViewById(R.id.settings_save_btn);
+        btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String item = dropDownText.getText().toString();
@@ -95,12 +81,13 @@ public class PreferencesFragment extends Fragment {
         });
 
 
-        final Button logoutbtn = rootView.findViewById(R.id.btnLogout);
-        logoutbtn.setBackgroundColor(Color.RED);
+        final Button btn_logout = rootView.findViewById(R.id.settings_logout_btn);
+        btn_logout.setBackgroundColor(Color.RED);
 
-        logoutbtn.setOnClickListener(new View.OnClickListener() {
+        btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: This alert needs improvements!
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
                 builder.setTitle("Logout");

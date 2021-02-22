@@ -75,7 +75,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         final Marker[] markerName = {null};
-        final Boolean[] firstime = {true};
+        final Boolean[] isFirstTime = {true};
         SkateParks = new ArrayList<SkatePark>();
         YikeSpots = new ArrayList<YikeSpot>();
         mMap = googleMap;
@@ -110,16 +110,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             public void onLocationChanged(@NonNull Location location) {
                 LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-                if (firstime[0] == true) {
+                if (isFirstTime[0]) {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
-                    firstime[0] = false;
+                    isFirstTime[0] = false;
                 }
                 if (markerName[0] != null) {
                     markerName[0].remove();
                     markerName[0] = null;
                 }
                 if (markerName[0] == null) {
-                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.hotspot))));
+                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_skater))));
                 }
 
             }
@@ -164,7 +164,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     YikeSpot yikeSpot = postSnapshot.getValue(YikeSpot.class);
                     YikeSpots.add(yikeSpot);
                     LatLng spot = new LatLng(yikeSpot.getSpotLat(), yikeSpot.getSpotLong());
-                    mMap.addMarker(new MarkerOptions().position(spot).title("YikeSpot "+ yikeSpot.getSpotName()).icon((BitmapDescriptorFactory.fromResource(R.drawable.hotspot))));
+                    mMap.addMarker(new MarkerOptions().position(spot).title("YikeSpot "+ yikeSpot.getSpotName()).icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot))));
 
                 }
                 dbSpot.setValue(YikeSpots);

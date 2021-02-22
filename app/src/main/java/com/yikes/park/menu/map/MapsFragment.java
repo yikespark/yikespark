@@ -2,16 +2,20 @@ package com.yikes.park.menu.map;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -27,6 +31,7 @@ import com.google.android.libraries.maps.model.LatLng;
 import com.google.android.libraries.maps.model.MapStyleOptions;
 import com.google.android.libraries.maps.model.Marker;
 import com.google.android.libraries.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,20 +61,33 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // http://geojson.io/
-        // https://github.com/googlemaps/android-maps-utils
-
-        GeoJsonLayer test;
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
 
-
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
+
+        /** Checks if user has the GPS disabled, if so, a message is shown */
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), "Your GPS is disabled", Snackbar.LENGTH_INDEFINITE);
+            snack.setAction("ENABLE", new gpsActivation());
+
+            View view = snack.getView();
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)view.getLayoutParams();
+            params.gravity = Gravity.CENTER;
+            view.setLayoutParams(params);
+            snack.show();
+        }
         return rootView;
+    }
+
+    public class gpsActivation implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+        }
     }
 
     @Override
@@ -119,7 +137,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     markerName[0] = null;
                 }
                 if (markerName[0] == null) {
-                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_skater))));
+                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
                 }
 
             }

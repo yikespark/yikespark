@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:background="@color/app_bg_color">
 
     <com.synnapps.carouselview.CarouselView
         android:id="@+id/login_carousel"

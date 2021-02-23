@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_bg_color"
     >
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,7 +17,7 @@
         app:tint="#2E2E2E"
         app:fabSize="mini"
         app:srcCompat="@drawable/ic_add_white_24dp"
-        map:backgroundTint="#BA86FC"
+        map:backgroundTint="@color/purple_200"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent" />
 

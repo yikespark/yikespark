@@ -3,6 +3,7 @@ package com.yikes.park.menu.map;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
@@ -22,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.maps.CameraUpdateFactory;
 import com.google.android.libraries.maps.GoogleMap;
 import com.google.android.libraries.maps.OnMapReadyCallback;
@@ -53,6 +55,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     DatabaseReference dbSpot;
     protected ArrayList<SkatePark> SkateParks;
     protected ArrayList<YikeSpot> YikeSpots;
+
+    Context context = getActivity();
+    SharedPreferences sharedPref;
 
     public MapsFragment() {
         // Required empty public constructor
@@ -106,6 +111,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         final Marker[] markerName = {null};
         final Boolean[] isFirstTime = {true};
+        final double[] currentLocation = {};
         SkateParks = new ArrayList<SkatePark>();
         YikeSpots = new ArrayList<YikeSpot>();
         mMap = googleMap;
@@ -139,7 +145,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                sharedPref.edit().putString("latitude", String.valueOf(41.38433852351688)).commit();
+                sharedPref.edit().putString("longitude", String.valueOf(2.130721597994662)).commit();
 
+//                currentLocation[0] = location.getLatitude();
+//                currentLocation[1] = location.getLongitude();
                 if (isFirstTime[0]) {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
                     isFirstTime[0] = false;

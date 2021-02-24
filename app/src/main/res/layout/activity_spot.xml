@@ -6,10 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".menu.map.spot">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="U・ᴥ・U" />
+    <EditText
+        android:id="@+id/newSpotAuthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="120dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newSpotName" />
+
+    <Button
+        android:id="@+id/newSpot"
+        android:layout_width="214dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="236dp"
+        android:text="Add Spot"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newSpotName" />
+
+    <EditText
+        android:id="@+id/newSpotName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="168dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

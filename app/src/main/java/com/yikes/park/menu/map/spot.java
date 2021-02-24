@@ -20,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.yikes.park.R;
+import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.coords.YikeSpot;
 
 import java.util.ArrayList;
@@ -27,14 +28,12 @@ import java.util.ArrayList;
 public class spot extends AppCompatActivity {
     DatabaseReference dbSpot;
     protected ArrayList<YikeSpot> YikeSpots;
-    SharedPreferences sharedPref;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         dbSpot = FirebaseDatabase.getInstance().getReference().child("yikeSpots");
         YikeSpots = new ArrayList<YikeSpot>();
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spot);
@@ -49,8 +48,8 @@ public class spot extends AppCompatActivity {
         final Button button = findViewById(R.id.newSpot);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                double myLatitude = Double.parseDouble(sharedPref.getString("latitude","0"));
-                double myLongitude = Double.parseDouble(sharedPref.getString("longitude","0"));
+                double myLatitude = Double.parseDouble( MainActivity.sharedPref.getString("latitude","0"));
+                double myLongitude = Double.parseDouble( MainActivity.sharedPref.getString("longitude","0"));
 
                 YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(),myLatitude, myLongitude, newSpotAuthor.getText().toString());
                 YikeSpots.add(yikeSpot);

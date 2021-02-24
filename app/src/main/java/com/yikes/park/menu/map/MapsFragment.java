@@ -41,6 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.yikes.park.R;
+import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.coords.SkatePark;
 import com.yikes.park.menu.map.coords.YikeSpot;
 
@@ -145,9 +146,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onLocationChanged(@NonNull Location location) {
                 LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-                sharedPref.edit().putString("latitude", String.valueOf(41.38433852351688)).commit();
-                sharedPref.edit().putString("longitude", String.valueOf(2.130721597994662)).commit();
+                MainActivity.sharedPref.edit().putString("latitude", String.valueOf(location.getLatitude())).apply();
+                MainActivity.sharedPref.edit().putString("longitude", String.valueOf(location.getLongitude())).apply();
 
 //                currentLocation[0] = location.getLatitude();
 //                currentLocation[1] = location.getLongitude();

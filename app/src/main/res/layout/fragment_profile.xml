@@ -10,114 +10,177 @@
         android:layout_width="match_parent"
         android:layout_height="405dp">
         <LinearLayout
-            android:background="@drawable/profile_gradient"
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:background="@color/app_bg_color"
+            android:weightSum="2">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_user_image"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="35dp"
-                android:src="@drawable/login_image0"
-                app:civ_border_color="#FFFFFFFF"
-                app:civ_border_width="3dp" />
-
-            <TextView
-                android:id="@+id/profile_field1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:textColor="@color/app_white_text_color"
-                android:textSize="26dp"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
-        
-        <androidx.cardview.widget.CardView
-            android:layout_width="400dp"
-            android:layout_height="120dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="275dp">
             <LinearLayout
+                android:background="@drawable/profile_gradient"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:background="@color/app_element_color"
-                android:weightSum="3">
-                <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                android:layout_height="350dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_user_image"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="35dp"
+                        android:layout_marginLeft="40dp"
+                        android:src="@drawable/login_image0"
+                        app:civ_border_color="#FFFFFFFF"
+                        app:civ_border_width="3dp" />
+
                     <TextView
+                        android:id="@+id/profile_field1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_weight="1"
+                        android:text="TextView"
                         android:textColor="@color/app_white_text_color"
-                        android:text="Images"
-                        android:textSize="20sp">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:text="999"
-                        android:textColor="@color/purple_200"
-                        android:paddingTop="10dp"
-                        android:textSize="20sp"></TextView>
+                        android:textSize="26dp"
+                        android:textStyle="bold" />
+
                 </LinearLayout>
                 <LinearLayout
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
+                    android:layout_width="140dp"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="center">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/app_white_text_color"
-                        android:text="Following"
-                        android:textSize="20sp">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:text="999"
-                        android:textColor="@color/purple_200"
-                        android:paddingTop="10dp"
-                        android:textSize="20sp"></TextView>
-                </LinearLayout>
-                <LinearLayout
                     android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:gravity="center">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/app_white_text_color"
-                        android:text="Followers"
-                        android:textSize="20sp">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:text="999"
-                        android:textColor="@color/purple_200"
-                        android:paddingTop="10dp"
-                        android:textSize="20sp"></TextView>
+                    android:gravity="center_horizontal"
+                    android:weightSum="3">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/asasd"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:backgroundTint="@color/purple_200"
+                        android:layout_marginTop="30dp"
+                        app:fabSize="mini"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:srcCompat="@drawable/ic_add_white_24dp"
+                        app:tint="#2E2E2E" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/xxx"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="30dp"
+
+                        app:backgroundTint="@color/purple_200"
+                        app:fabSize="mini"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:srcCompat="@drawable/ic_add_white_24dp"
+                        app:tint="#2E2E2E" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/dsd"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginBottom="30dp"
+                        app:backgroundTint="@color/purple_200"
+                        app:fabSize="mini"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:srcCompat="@drawable/ic_add_white_24dp"
+                        app:tint="#2E2E2E" />
+
+
                 </LinearLayout>
-                
+
+
+
+
+
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="400dp"
+                    android:layout_height="120dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="275dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:background="@color/app_element_color"
+                        android:weightSum="3">
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/app_white_text_color"
+                                android:text="Score"
+                                android:textSize="20sp">
+                            </TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:text="999"
+                                android:textColor="@color/purple_200"
+                                android:paddingTop="10dp"
+                                android:textSize="20sp"></TextView>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/app_white_text_color"
+                                android:text="YikeSpots"
+                                android:textSize="20sp">
+                            </TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:text="999"
+                                android:textColor="@color/purple_200"
+                                android:paddingTop="10dp"
+                                android:textSize="20sp"></TextView>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/app_white_text_color"
+                                android:text="Followers"
+                                android:textSize="20sp">
+                            </TextView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:text="999"
+                                android:textColor="@color/purple_200"
+                                android:paddingTop="10dp"
+                                android:textSize="20sp"></TextView>
+                        </LinearLayout>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

@@ -55,7 +55,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     protected ArrayList<YikeSpot> YikeSpots;
 
     public MapsFragment() {
-        // Required empty public constructor
+        /* Required empty public constructor */
     }
 
     @Override

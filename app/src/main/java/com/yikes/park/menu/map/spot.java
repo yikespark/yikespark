@@ -1,7 +1,5 @@
 package com.yikes.park.menu.map;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,9 +9,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
-import com.google.android.libraries.maps.model.LatLng;
-import com.google.android.libraries.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,10 +43,10 @@ public class spot extends AppCompatActivity {
         final Button button = findViewById(R.id.newSpot);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                double myLatitude = Double.parseDouble( MainActivity.sharedPref.getString("latitude","0"));
-                double myLongitude = Double.parseDouble( MainActivity.sharedPref.getString("longitude","0"));
+                double myLatitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LATITUDE_KEY,"0"));
+                double myLongitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LONGITUDE_KEY,"0"));
 
-                YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(),myLatitude, myLongitude, newSpotAuthor.getText().toString());
+                YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, newSpotAuthor.getText().toString());
                 YikeSpots.add(yikeSpot);
                 dbSpot.setValue(YikeSpots);
             }

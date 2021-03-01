@@ -82,6 +82,9 @@ dependencies {
 
     /* EasyPermissions Library */
     implementation 'pub.devrel:easypermissions:3.0.0'
+
+    /* Gson Library */
+    implementation 'com.google.code.gson:gson:2.8.6'
     
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'

@@ -10,30 +10,31 @@
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
     android:gravity="center"
-    tools:context=".menu.map.spot">
+    tools:context=".menu.map.NewYikeSpot">
+
+
+    <ImageView
+        android:id="@+id/image_yikespot"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:src="@drawable/ic_image_default_24px">
+        <!-- android:alpha="0.2" -->
+        </ImageView>
+
+    <Button
+        android:id="@+id/image_yikespot_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="HAÑADIR PHOTO" />
+
 
     <com.google.android.material.textfield.TextInputLayout
 
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre de usuario"
-        tools:ignore="MissingConstraints">
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/newSpotAuthor"
-        android:inputType="textPersonName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Nombre de Spot"
+        android:hint="YikeSpot name"
         android:layout_marginTop="16dp"
         tools:ignore="MissingConstraints">
         <com.google.android.material.textfield.TextInputEditText

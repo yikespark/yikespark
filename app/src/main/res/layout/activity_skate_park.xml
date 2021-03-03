@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".menu.map.YikesSpotActivity">
-
+    tools:context=".menu.map.SkateParkActivity">
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="Esto es un YikeSPot" />
+        android:text="Esto es un SkatePark" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

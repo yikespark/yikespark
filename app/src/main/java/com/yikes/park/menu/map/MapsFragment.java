@@ -204,9 +204,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
-                            Intent intent = new Intent(getContext(), YikesSpotActivity.class);
-                            startActivity(intent);
-                            return true;
+                            Log.d("TAG", marker.getTitle());
+                            if (marker.getTitle().startsWith("YikeSpot")) {
+                                Intent intent = new Intent(getContext(), YikesSpotActivity.class);
+                                startActivity(intent);
+                                return true;
+                            } if (marker.getTitle().startsWith("Skate Park")){
+                                Intent intent = new Intent(getContext(), SkateParkActivity.class);
+                                startActivity(intent);
+                                return true;
+                            }
+                            return false;
                         }
                     });
                 }

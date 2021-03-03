@@ -19,10 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Yikes"
         tools:ignore="AllowBackup">
-
-        <activity android:name=".menu.map.NewYikeSpot"></activity>
-        <activity android:name=".menu.map.YikesSpotActivity"></activity>
-      
+        <activity android:name=".menu.map.SkateParkActivity"></activity>
+        <activity android:name=".menu.map.YikesSpotActivity" />
+        <activity android:name=".menu.map.NewYikeSpot" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

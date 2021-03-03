@@ -33,7 +33,6 @@ public class ProfileFragment extends Fragment {
     private final int UPDATE_MY_DATA = 0;
     private final int GET_DATA_FROM_ANOTHER_USER = 1;
 
-
     private FirebaseAuth mAuth;
     private DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users");
     private UserInformation my_user;
@@ -61,17 +60,14 @@ public class ProfileFragment extends Fragment {
         // Gets the avatar image from the current e-mail account
         Glide.with(this).load(user.getPhotoUrl()).into((ImageView) rootView.findViewById(R.id.profile_user_image));
 
-        /* TextView fologuar = rootView.findViewById(R.id.profile_followers);
-        fologuar.setText(String.valueOf(my_user.getFollowers())); */
+        TextView fologuar = rootView.findViewById(R.id.profile_followers);
 
         // Gets the id
         TextView myUserName = rootView.findViewById(R.id.profile_field1);
-
-        TextView txt1 = rootView.findViewById(R.id.profile_field1);
         if (user != null) {
-            txt1.setText(user.getUid());
+            myUserName.setText(user.getUid());
         } else {
-            txt1.setVisibility(View.GONE);
+            myUserName.setVisibility(View.GONE);
         }
 
         myUserName.setOnClickListener(new View.OnClickListener() {

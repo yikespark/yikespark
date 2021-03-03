@@ -201,7 +201,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     YikeSpots.add(yikeSpot);
                     LatLng spot = new LatLng(yikeSpot.getSpotLat(), yikeSpot.getSpotLong());
                     mMap.addMarker(new MarkerOptions().position(spot).title("YikeSpot "+ yikeSpot.getSpotName()).icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot))));
-
+                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Intent intent = new Intent(getContext(), YikesSpotActivity.class);
+                            startActivity(intent);
+                            return true;
+                        }
+                    });
                 }
                 dbSpot.setValue(YikeSpots);
             }

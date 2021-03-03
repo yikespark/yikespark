@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.yikes.park.LoginActivity;
 import com.yikes.park.R;
+import com.yikes.park.menu.MainActivity;
 
 import java.util.Locale;
 
@@ -103,6 +104,7 @@ public class PreferencesFragment extends Fragment {
 
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        MainActivity.sharedPref.edit().remove(MainActivity.MY_USER_KEY).apply(); // Removes stored user in memory just for safety!
                         signOut();
                         dialog.dismiss();
                     }

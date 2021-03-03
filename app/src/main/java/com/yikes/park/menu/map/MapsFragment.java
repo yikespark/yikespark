@@ -92,7 +92,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void openNewActivity(){
-        Intent intent = new Intent(getContext(), spot.class);
+        Intent intent = new Intent(getContext(), NewYikeSpot.class);
         startActivity(intent);
     }
 

@@ -30,9 +30,8 @@ import java.util.ArrayList;
 
 public class ProfileFragment extends Fragment {
 
-    private final int GET_MY_USER_DATA = 0;
+    private final int UPDATE_MY_DATA = 0;
     private final int GET_DATA_FROM_ANOTHER_USER = 1;
-    private final int UPDATE_MY_DATA = 2;
 
     private FirebaseAuth mAuth;
     private DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -62,15 +61,22 @@ public class ProfileFragment extends Fragment {
         Glide.with(this).load(user.getPhotoUrl()).into((ImageView) rootView.findViewById(R.id.profile_user_image));
 
         TextView fologuar = rootView.findViewById(R.id.profile_followers);
-        fologuar.setText(String.valueOf(my_user.getFollowers()));
 
         // Gets the id
-        TextView txt1 = rootView.findViewById(R.id.profile_field1);
+        TextView myUserName = rootView.findViewById(R.id.profile_field1);
         if (user != null) {
-            txt1.setText(user.getUid());
+            myUserName.setText(user.getUid());
         } else {
-            txt1.setVisibility(View.GONE);
+            myUserName.setVisibility(View.GONE);
         }
+
+        myUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("prueba", "Editando!");
+            }
+        });
+
         return rootView;
     }
 

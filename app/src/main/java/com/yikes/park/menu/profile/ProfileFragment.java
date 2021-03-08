@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -58,7 +59,9 @@ public class ProfileFragment extends Fragment {
 
         /* TODO: Improve everything! */
         // Gets the avatar image from the current e-mail account
-        Glide.with(this).load(user.getPhotoUrl()).into((ImageView) rootView.findViewById(R.id.profile_user_image));
+        RequestOptions options = new RequestOptions();
+        options.circleCrop();
+        Glide.with(this).load(user.getPhotoUrl()).apply(options).into((ImageView) rootView.findViewById(R.id.profile_user_image));
 
         TextView fologuar = rootView.findViewById(R.id.profile_followers);
 

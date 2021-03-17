@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -16,11 +17,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.libraries.maps.model.Marker;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.yikes.park.R;
 import com.yikes.park.menu.MainActivity;
@@ -28,6 +34,7 @@ import com.yikes.park.menu.map.coords.YikeSpot;
 import com.yikes.park.menu.profile.data.UserInformation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NewYikeSpot extends AppCompatActivity {
     DatabaseReference dbSpot;
@@ -35,6 +42,8 @@ public class NewYikeSpot extends AppCompatActivity {
     private UserInformation myUser;
     private Button add_spot_img_btn;
     private ImageView spot_img;
+    private String imgUrl = "";
+    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,7 @@ public class NewYikeSpot extends AppCompatActivity {
         YikeSpots = new ArrayList<YikeSpot>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newspot);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
 
         /** Loads user information */
         Gson gson = new Gson();
@@ -60,8 +70,22 @@ public class NewYikeSpot extends AppCompatActivity {
             }
         });
 
-
         TextView newSpotName = findViewById(R.id.newSpotName);
+
+        ///////////////////Delet Img/////////////////////////////////
+//        StorageReference Folder = FirebaseStorage.getInstance().getReference();
+//        StorageReference desertRef = Folder.child("/yikeSpot/EdgeLord/file/storage/emulated/0/DCIM/Camera/IMG_20210227_202726.jpg");
+//        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//            @Override
+//            public void onSuccess(Void aVoid) {
+//                // File deleted successfully
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Uh-oh, an error occurred!
+//            }
+//        });
 
         final Button button = findViewById(R.id.newSpot);
         button.setOnClickListener(new View.OnClickListener() {
@@ -69,9 +93,28 @@ public class NewYikeSpot extends AppCompatActivity {
                 double myLatitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LATITUDE_KEY,"0"));
                 double myLongitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LONGITUDE_KEY,"0"));
 
-                YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, myUser.getId());
-                YikeSpots.add(yikeSpot);
-                dbSpot.setValue(YikeSpots);
+                StorageReference storageRef = storage.getReference();
+
+                StorageReference Folder = storageRef.child("yikeSpot");
+
+                StorageReference file_name = Folder.child((String) newSpotName.getText());
+
+                file_name.putFile(uri).addOnSuccessListener(taskSnapshot -> file_name.getDownloadUrl().addOnSuccessListener(furi -> {
+                    imgUrl = String.valueOf(furi);
+
+                    Log.i("logTest3", imgUrl);
+                }));
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, myUser.getId(), imgUrl);
+                        YikeSpots.add(yikeSpot);
+                        dbSpot.setValue(YikeSpots);
+                    }
+                }, 5050);
+
             }
         });
 
@@ -117,7 +160,6 @@ public class NewYikeSpot extends AppCompatActivity {
 
         Bitmap bitmap = null;
         if(requestCode == 10 && resultCode == RESULT_OK){
-            Uri uri;
             uri = data.getData();
             try {
                 bitmap = MediaStore.Images.Media
@@ -125,6 +167,7 @@ public class NewYikeSpot extends AppCompatActivity {
             } catch (Exception e){
                 e.printStackTrace();
             }
+
         } else if (requestCode == 20 && resultCode == RESULT_OK) {
             bitmap = (Bitmap) data.getExtras().get("data");
         }

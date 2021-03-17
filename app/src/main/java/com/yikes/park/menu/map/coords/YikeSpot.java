@@ -5,14 +5,16 @@ public class YikeSpot {
     public double spotLat;
     public double spotLong;
     public String spotCreator;
+    public String spotPicture;
 
     public YikeSpot() { }
 
-    public YikeSpot(String spotName, double spotLat, double spotLong, String spotCreator) {
+    public YikeSpot(String spotName, double spotLat, double spotLong, String spotCreator, String spotPicture) {
         this.spotName = spotName;
         this.spotLat = spotLat;
         this.spotLong = spotLong;
         this.spotCreator = spotCreator;
+        this.spotPicture = spotPicture;
     }
 
     public String getSpotCreator() { return spotCreator; }
@@ -42,4 +44,8 @@ public class YikeSpot {
     public void setSpotLong(double spotLong) {
         this.spotLong = spotLong;
     }
+
+    public String getspotPicture() { return spotPicture; }
+
+    public void setspotPicture(String spotPicture) { this.spotPicture = spotPicture; }
 }

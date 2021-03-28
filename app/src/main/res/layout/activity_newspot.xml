@@ -17,9 +17,10 @@
         android:id="@+id/image_yikespot"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:clickable="true"
         android:src="@drawable/ic_image_default_24px">
         <!-- android:alpha="0.2" -->
-        </ImageView>
+    </ImageView>
 
     <Button
         android:id="@+id/image_yikespot_btn"
@@ -27,7 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="HAÑADIR PHOTO" />
-
 
     <com.google.android.material.textfield.TextInputLayout
 

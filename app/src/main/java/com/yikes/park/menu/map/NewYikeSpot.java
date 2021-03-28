@@ -40,7 +40,7 @@ public class NewYikeSpot extends AppCompatActivity {
     DatabaseReference dbSpot;
     protected ArrayList<YikeSpot> YikeSpots;
     private UserInformation myUser;
-    private Button add_spot_img_btn;
+    private Button add_img_from_gallery;
     private ImageView spot_img;
     private String imgUrl = "";
     private Uri uri;
@@ -59,14 +59,22 @@ public class NewYikeSpot extends AppCompatActivity {
         myUser = gson.fromJson(json, UserInformation.class);
         waitForDataFetch();
 
-
         spot_img = findViewById(R.id.image_yikespot);
 
-        add_spot_img_btn = findViewById(R.id.image_yikespot_btn);
-        add_spot_img_btn.setOnClickListener(new View.OnClickListener() {
+        add_img_from_gallery = findViewById(R.id.image_yikespot_btn);
+        add_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
                 loadImageFromGalery();
+            }
+        });
+
+        ImageView add_img_from_camera = spot_img;
+        add_img_from_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadImageFromCamera();
             }
         });
 
@@ -97,7 +105,7 @@ public class NewYikeSpot extends AppCompatActivity {
 
                 StorageReference Folder = storageRef.child("yikeSpot");
 
-                StorageReference file_name = Folder.child((String) newSpotName.getText());
+                StorageReference file_name = Folder.child(newSpotName.getText().toString());
 
                 file_name.putFile(uri).addOnSuccessListener(taskSnapshot -> file_name.getDownloadUrl().addOnSuccessListener(furi -> {
                     imgUrl = String.valueOf(furi);
@@ -149,9 +157,13 @@ public class NewYikeSpot extends AppCompatActivity {
 
     /** Image related stuff */
     private void loadImageFromGalery() {
-        Intent intent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 10);
+    }
+
+    private void loadImageFromCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, 20);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.yikes.park.menu.map;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,9 +20,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.maps.model.Marker;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +39,8 @@ import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.coords.YikeSpot;
 import com.yikes.park.menu.profile.data.UserInformation;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,6 +52,11 @@ public class NewYikeSpot extends AppCompatActivity {
     private ImageView spot_img;
     private String imgUrl = "";
     private Uri uri;
+    private File photoFile;
+
+    private ImageView add_img_from_camera;
+
+    private long yikeID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +77,12 @@ public class NewYikeSpot extends AppCompatActivity {
         add_img_from_gallery = findViewById(R.id.image_yikespot_btn);
         add_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View v) {
                 loadImageFromGalery();
             }
         });
 
-        ImageView add_img_from_camera = spot_img;
+        add_img_from_camera = spot_img;
         add_img_from_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,11 +119,17 @@ public class NewYikeSpot extends AppCompatActivity {
 
                 StorageReference file_name = Folder.child(newSpotName.getText().toString());
 
-                file_name.putFile(uri).addOnSuccessListener(taskSnapshot -> file_name.getDownloadUrl().addOnSuccessListener(furi -> {
-                    imgUrl = String.valueOf(furi);
-
-                    Log.i("logTest3", imgUrl);
-                }));
+                if (uri != null) { // If no URI, then put a default one
+                    file_name.putFile(uri).addOnSuccessListener(taskSnapshot -> file_name.getDownloadUrl().addOnSuccessListener(furi -> {
+                        imgUrl = String.valueOf(furi);
+                        Log.i("imgURI", imgUrl);
+                    }));
+                } else {
+                    /** TODO
+                     *  Se debe añadir una imagen por defecto en caso de que el usuario no añada ninguna imagen:
+                     *  imgURL = AÑADIR UNA URI POR DEFECTO;
+                     */
+                }
 
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -129,7 +147,7 @@ public class NewYikeSpot extends AppCompatActivity {
         dbSpot.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i("logTest ", "" + dataSnapshot.getChildrenCount());
+                yikeID = dataSnapshot.getChildrenCount(); // Stores the last item ID in the DB
                 YikeSpots.clear();
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
@@ -163,6 +181,17 @@ public class NewYikeSpot extends AppCompatActivity {
 
     private void loadImageFromCamera() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        String fileName = "new-photo-name.jpg";
+        // Create parameters for Intent with filename
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, fileName);
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Image capture by camera");
+        uri =
+                getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        values);
+
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         startActivityForResult(intent, 20);
     }
 
@@ -181,8 +210,25 @@ public class NewYikeSpot extends AppCompatActivity {
             }
 
         } else if (requestCode == 20 && resultCode == RESULT_OK) {
-            bitmap = (Bitmap) data.getExtras().get("data");
+            // bitmap = (Bitmap) data.getExtras().get("data");
+
+            try {
+                ContentResolver cr = getContentResolver();
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(cr, uri);
+                    add_img_from_camera.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (IllegalArgumentException e) {
+                if (e.getMessage() != null)
+                    Log.e("Exception", e.getMessage());
+                else
+                    Log.e("Exception", "Exception");
+                e.printStackTrace();
+            }
         }
+
         if(bitmap != null){
             spot_img.setImageBitmap(bitmap);
         }

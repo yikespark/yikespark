@@ -179,8 +179,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         } catch (Resources.NotFoundException e) {
             Log.e("TAG", "Can't find style. Error: ", e);
         }
-        dbPark = FirebaseDatabase.getInstance().getReference().child("skateParks");
-        dbSpot = FirebaseDatabase.getInstance().getReference().child("yikeSpots");
+        dbPark = FirebaseDatabase.getInstance().getReference().child("SkateParks");
+        dbSpot = FirebaseDatabase.getInstance().getReference().child("YikeSpots");
 
         // START Get my current location
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
@@ -263,7 +263,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     YikeSpot yikeSpot = postSnapshot.getValue(YikeSpot.class);
                     YikeSpots.add(yikeSpot);
                     LatLng spot = new LatLng(yikeSpot.getSpotLat(), yikeSpot.getSpotLong());
-                    mMap.addMarker(new MarkerOptions().position(spot).title("YikeSpot "+ yikeSpot.getSpotName()).icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot))));
+                    mMap.addMarker(new MarkerOptions().position(spot).title("YS"+yikeSpot.getId()).icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot))));
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
@@ -278,7 +278,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                             String jsonYikes = gsonYikes.toJson(yikeSpot);
 
                             Log.d("TAG", marker.getTitle());
-                            if (marker.getTitle().startsWith("YikeSpot")) {
+                            if (marker.getTitle().startsWith("YS")) {
                                 Intent intent = new Intent(getContext(), YikesSpotActivity.class);
                                 intent.putExtra("marker",myJson);
                                 intent.putExtra("yikesSpot", jsonYikes);
@@ -294,7 +294,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         }
                     });
                 }
-                dbSpot.setValue(YikeSpots);
+
+                Log.d("YikeSPots", YikeSpots.toString());
+                //dbSpot.setValue(YikeSpots);
             }
 
             @Override

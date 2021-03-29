@@ -47,7 +47,7 @@ public class YikesSpotActivity extends AppCompatActivity {
         TextView lon = findViewById(R.id.lon);
         lon.setText(Double.toString(yikeSpot.getSpotLong()));
 
-        Glide.with(this).load(yikeSpot.getspotPicture()).into((ImageView) findViewById(R.id.imageView));
+        Glide.with(this).load(yikeSpot.getSpotPicture()).into((ImageView) findViewById(R.id.imageView));
     }
 
     public void onClick(View view) {

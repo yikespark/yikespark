@@ -42,10 +42,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.util.UUID;
 
 public class NewYikeSpot extends AppCompatActivity {
-    protected ArrayList<YikeSpot> YikeSpots;
     DatabaseReference dbSpot;
     String superUrl;
     UploadTask uploadTask;
@@ -59,8 +58,8 @@ public class NewYikeSpot extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        dbSpot = FirebaseDatabase.getInstance().getReference().child("yikeSpots");
-        YikeSpots = new ArrayList<>();
+        String spotID = UUID.randomUUID().toString();
+        dbSpot = FirebaseDatabase.getInstance().getReference().child("YikeSpots").child(spotID);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newspot);
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -155,9 +154,8 @@ public class NewYikeSpot extends AppCompatActivity {
                                         Uri downloadUri = task.getResult();
                                         Log.d("SUEPRURL", downloadUri.toString());
                                         superUrl = downloadUri.toString();
-                                        YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, myUser.getId(), superUrl);
-                                        YikeSpots.add(yikeSpot);
-                                        dbSpot.setValue(YikeSpots);
+                                        YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, myUser.getId(), superUrl, spotID);
+                                        dbSpot.setValue(yikeSpot);
                                         finish();
                                     } else {
                                         // Handle failures
@@ -182,7 +180,7 @@ public class NewYikeSpot extends AppCompatActivity {
             }
         });
 
-        dbSpot.addValueEventListener(new ValueEventListener() {
+        /*dbSpot.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 YikeSpots.clear();
@@ -198,7 +196,7 @@ public class NewYikeSpot extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.i("logTest", "EFailed to read value.", error.toException());
             }
-        });
+        });*/
     }
 
     public String getPathFromInputStreamUri(Context context, Uri uri) {

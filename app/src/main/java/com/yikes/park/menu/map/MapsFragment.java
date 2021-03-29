@@ -131,36 +131,61 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // START Get my current location
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
             return;
         }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
-                MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
+        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        assert lm != null;
+        boolean isGpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkLocationEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-//                currentLocation[0] = location.getLatitude();
-//                currentLocation[1] = location.getLongitude();
-                if (isFirstTime[0]) {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
-                    isFirstTime[0] = false;
-                }
-                if (markerName[0] != null) {
-                    markerName[0].remove();
-                    markerName[0] = null;
-                }
-                if (markerName[0] == null) {
+        if (isNetworkLocationEnabled){
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
+                    MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
+
+                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    if (isFirstTime[0]) {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
+                        isFirstTime[0] = false;
+                    }
+                    if (markerName[0] != null) {
+                        markerName[0].remove();
+                        markerName[0] = null;
+                    }
                     markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
+                    //                currentLocation[0] = location.getLatitude();
+//                currentLocation[1] = location.getLongitude();
                 }
+            });
+        } else if(isGpsEnabled) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                    MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
+                    MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
 
-            }
-        });
+                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+
+                    if (isFirstTime[0]) {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
+                        isFirstTime[0] = false;
+                    }
+                    if (markerName[0] != null) {
+                        markerName[0].remove();
+                        markerName[0] = null;
+                    }
+                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
+                    //currentLocation[0] = location.getLatitude();
+                    //currentLocation[1] = location.getLongitude();
+                }
+            });
+        }
         // END Get my current location
 
         ////////////////////// Firebase Skateparks //////////////////////

@@ -50,11 +50,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LocationManager locationManager;
+    private Marker markerName = null;
+    private Boolean isFirstTime = true;
 
     DatabaseReference dbPark;
     DatabaseReference dbSpot;
     protected ArrayList<SkatePark> SkateParks;
     protected ArrayList<YikeSpot> YikeSpots;
+
 
     public MapsFragment() {
         /* Required empty public constructor */
@@ -104,10 +107,61 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    public static Boolean getLocationWithCheckNetworkAndGPS(Context mContext) {
+        LocationManager lm = (LocationManager)
+                mContext.getSystemService(Context.LOCATION_SERVICE);
+        assert lm != null;
+        boolean isGpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkLocationEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        Boolean finalLoc = null;
+
+        Location networkLoacation = null, gpsLocation = null;
+        if (isGpsEnabled)
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                return null;
+            }
+
+        gpsLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if (isNetworkLocationEnabled)
+            networkLoacation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        if (gpsLocation != null && networkLoacation != null) {
+
+            //smaller the number more accurate result will
+            if (gpsLocation.getAccuracy() > networkLoacation.getAccuracy())
+                return finalLoc = false;
+            else
+                return finalLoc = true;
+
+        } else {
+
+            if (gpsLocation != null) {
+                return finalLoc = true;
+            } else if (networkLoacation != null) {
+                return finalLoc = false;
+            }
+        }
+        return finalLoc;
+    }
+
+    public void setMyLocationMarker(LatLng myLocation) {
+        if (isFirstTime) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
+            isFirstTime = false;
+        }
+        if (markerName != null) {
+            markerName.remove();
+            markerName = null;
+        }
+        Log.d("trackPosition", "onLocationChanged: ");
+        markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        final Marker[] markerName = {null};
-        final Boolean[] isFirstTime = {true};
+
         final double[] currentLocation = {};
         SkateParks = new ArrayList<SkatePark>();
         YikeSpots = new ArrayList<YikeSpot>();
@@ -138,53 +192,36 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         assert lm != null;
-        boolean isGpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNetworkLocationEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        Boolean useGPS = getLocationWithCheckNetworkAndGPS(getContext());
+        if (useGPS != null) {
+            if (!useGPS) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+                        MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
+                        MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
 
-        if (isNetworkLocationEnabled){
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, new LocationListener() {
-                @Override
-                public void onLocationChanged(@NonNull Location location) {
-                    MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
-                    MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
+                        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        setMyLocationMarker(myLocation);
 
-                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    if (isFirstTime[0]) {
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
-                        isFirstTime[0] = false;
                     }
-                    if (markerName[0] != null) {
-                        markerName[0].remove();
-                        markerName[0] = null;
-                    }
-                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
-                    //                currentLocation[0] = location.getLatitude();
-//                currentLocation[1] = location.getLongitude();
-                }
-            });
-        } else if(isGpsEnabled) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
-                @Override
-                public void onLocationChanged(@NonNull Location location) {
-                    MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
-                    MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
+                });
+            } else if (useGPS) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+                        MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
+                        MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
 
-                    LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        setMyLocationMarker(myLocation);
+                    }
+                });
+            }
 
-                    if (isFirstTime[0]) {
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
-                        isFirstTime[0] = false;
-                    }
-                    if (markerName[0] != null) {
-                        markerName[0].remove();
-                        markerName[0] = null;
-                    }
-                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
-                    //currentLocation[0] = location.getLatitude();
-                    //currentLocation[1] = location.getLongitude();
-                }
-            });
+            //currentLocation[0] = location.getLatitude();
+            //currentLocation[1] = location.getLongitude();
         }
         // END Get my current location
 

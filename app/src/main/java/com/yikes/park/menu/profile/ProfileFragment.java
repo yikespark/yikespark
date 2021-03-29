@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.yikes.park.R;
+import com.yikes.park.getUserData;
 import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.profile.data.UserInformation;
 
@@ -55,44 +56,35 @@ public class ProfileFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
 
-        ((MainActivity)getActivity()).getUserInformationFromDatabase(
-                value -> {
-                    my_user = value;
+        new getUserData().UserData(new getUserData.Call() {
+            @Override
+            public void onCallback(UserInformation value) {
+                Log.d("onCallback", value.toString());
+                my_user = value;
 
-                    TextView followers = rootView.findViewById(R.id.profile_followers);
-                    followers.setText(String.valueOf(my_user.getFollowers()));
-                    TextView email = rootView.findViewById(R.id.email);
-                    email.setText(my_user.getEmail());
-                    TextView id = rootView.findViewById(R.id.id);
-                    id.setText(my_user.getId());
-                    TextView desc = rootView.findViewById(R.id.desc);
-                    desc.setText(my_user.getDesc());
-                });
+                RequestOptions options = new RequestOptions();
+                options.circleCrop();
+                Glide.with(getContext()).load(my_user.getAvatar()).apply(options).into((ImageView) rootView.findViewById(R.id.profile_user_image));
+                TextView myUserName = rootView.findViewById(R.id.profile_field1);
+                myUserName.setText(my_user.getUsername());
+                TextView followers = rootView.findViewById(R.id.profile_followers);
+                followers.setText(String.valueOf(my_user.getFollowers()));
+                TextView email = rootView.findViewById(R.id.email);
+                email.setText(my_user.getEmail());
+                TextView id = rootView.findViewById(R.id.id);
+                id.setText(my_user.getId());
+                TextView desc = rootView.findViewById(R.id.desc);
+                desc.setText(my_user.getDesc());
+            }
+        });
         // UserInformation myUser = new UserInformation(user.getUid(), user.getEmail(), String.valueOf(user.getPhotoUrl()));
-
-        /* TODO: Improve everything! */
-        // Gets the avatar image from the current e-mail account
-        RequestOptions options = new RequestOptions();
-        options.circleCrop();
-        Glide.with(this).load(user.getPhotoUrl()).apply(options).into((ImageView) rootView.findViewById(R.id.profile_user_image));
-
-        // Gets the id
-        TextView myUserName = rootView.findViewById(R.id.profile_field1);
-        if (user != null) {
-            myUserName.setText(user.getDisplayName());
-        } else {
-            myUserName.setVisibility(View.GONE);
-        }
-
         ImageButton editButton = rootView.findViewById(R.id.editButton);
-
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("prueba", "Editando!");
             }
         });
-
         return rootView;
     }
 

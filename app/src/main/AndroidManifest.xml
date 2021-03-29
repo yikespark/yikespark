@@ -19,7 +19,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Yikes"
         tools:ignore="AllowBackup">
-        <activity android:name=".menu.map.SkateParkActivity"></activity>
+        <activity android:name=".menu.map.externalProfile"></activity>
+        <activity android:name=".menu.map.SkateParkActivity" />
         <activity android:name=".menu.map.YikesSpotActivity" />
         <activity android:name=".menu.map.NewYikeSpot" />
         <!--

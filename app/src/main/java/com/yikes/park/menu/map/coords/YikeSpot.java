@@ -17,6 +17,17 @@ public class YikeSpot {
         this.spotPicture = spotPicture;
     }
 
+    @Override
+    public String toString() {
+        return "YikeSpot{" +
+                "spotName='" + spotName + '\'' +
+                ", spotLat=" + spotLat +
+                ", spotLong=" + spotLong +
+                ", spotCreator='" + spotCreator + '\'' +
+                ", spotPicture='" + spotPicture + '\'' +
+                '}';
+    }
+
     public String getSpotCreator() { return spotCreator; }
 
     public void setSpotCreator(String spotCreator) { this.spotCreator = spotCreator; }

@@ -38,6 +38,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.yikes.park.R;
 import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.coords.SkatePark;
@@ -204,13 +205,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
+                            Gson gson = new Gson();
+                            simpleMarker simpleMarker = new simpleMarker(
+                                    marker.getTitle(),
+                                    marker.getPosition().latitude,
+                                    marker.getPosition().longitude
+                            );
+                            String myJson = gson.toJson(simpleMarker);
+                            Gson gsonYikes = new Gson();
+                            String jsonYikes = gsonYikes.toJson(yikeSpot);
+
                             Log.d("TAG", marker.getTitle());
                             if (marker.getTitle().startsWith("YikeSpot")) {
                                 Intent intent = new Intent(getContext(), YikesSpotActivity.class);
+                                intent.putExtra("marker",myJson);
+                                intent.putExtra("yikesSpot", jsonYikes);
                                 startActivity(intent);
                                 return true;
                             } if (marker.getTitle().startsWith("Skate Park")){
                                 Intent intent = new Intent(getContext(), SkateParkActivity.class);
+                                intent.putExtra("marker",myJson);
                                 startActivity(intent);
                                 return true;
                             }

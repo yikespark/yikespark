@@ -7,24 +7,34 @@ public class UserInformation {
     private String email;
     private String avatar;
     private int followers;
+    private String desc;
 
     public UserInformation() {
         // Default constructor required for calls to DataSnapshot.getValue(UserInformation.class)
     }
 
-    public UserInformation(String id, String username, String email, String avatar, int followers) {
+    public UserInformation(String id, String username, String email, String avatar, int followers, String desc) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.avatar = avatar;
         this.followers = followers;
+        this.desc = desc;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
     public String getId() {
         return id;
     }
 
-    public void setId(String username) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -60,5 +70,14 @@ public class UserInformation {
         this.followers = followers;
     }
 
-
+    @Override
+    public String toString() {
+        return "UserInformation{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", followers=" + followers +
+                '}';
+    }
 }

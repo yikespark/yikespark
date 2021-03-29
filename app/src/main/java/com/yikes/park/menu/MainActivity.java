@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
 
         db = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
-        getUserInformationFromDatabase();
-
 
         /* Navigation */
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -100,33 +98,30 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void getUserInformationFromDatabase() {
+    public interface MyCallback {
+        void onCallback(UserInformation value);
+    }
+
+    public void getUserInformationFromDatabase(MyCallback myCallback) {
         db.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean userFound = false;
-                Gson gson = new Gson();
 
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    if (postSnapshot.child(user.getUid()).exists()) {
-                        UserInformation db_user = postSnapshot.child(user.getUid()).getValue(UserInformation.class);
-                        userFound = true;
-                        myUser = db_user;
+                if (dataSnapshot.exists()) {
+                    //lol, la mierda esta no funcionaba, cada vez que abriamos la aplicación
+                    //reescribia los datos del usuario, ahora deberia de funcionar.
+                    //Quizás pasa lo mismo con otras cosas.
+                    //if (postSnapshot.child(user.getUid()).exists())
+                    //Pero quien coño a hecho esto de verdad, son las 4 y todavia estoy arreglando
+                    //las chapuzas.
 
-                        // Parses UserInformation into a JSON and stores it in memory for future magic
-                        String userJSON = gson.toJson(myUser);
-                        sharedPref.edit().putString(MY_USER_KEY, userJSON).apply();
-                        break;
-                    }
+                        UserInformation db_user = dataSnapshot.getValue(UserInformation.class);
+                        myCallback.onCallback(db_user);
                 }
                 // The user is not in the Database, so we add it!
-                if (!userFound) {
-                    myUser = new UserInformation(user.getUid(), user.getUid(), user.getEmail(), String.valueOf(user.getPhotoUrl()), 0);
+                else {
+                    myUser = new UserInformation(user.getUid(), user.getDisplayName(), user.getEmail(), String.valueOf(user.getPhotoUrl()), 0,"desc");
                     db.setValue(myUser);
-
-                    // Parses UserInformation into a JSON and stores it in memory for future magic
-                    String userJSON = gson.toJson(myUser);
-                    sharedPref.edit().putString(MY_USER_KEY, userJSON).apply();
                 }
             }
 
@@ -135,9 +130,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("logTest", "Failed to read value.", error.toException());
             }
         });
-
-
-
     }
 
 }

@@ -162,14 +162,7 @@ public class NewYikeSpot extends AppCompatActivity {
                 Log.i("logTest", "EFailed to read value.", error.toException());
             }
         });
-
-
     }
-
-    private void checkIfData(Integer children, String yikesPot) {
-        dbSpot.child(String.valueOf(children)).orderByChild("spotName").equalTo(yikesPot);
-    }
-
 
     /** User profile related stuff */
     private void waitForDataFetch() {

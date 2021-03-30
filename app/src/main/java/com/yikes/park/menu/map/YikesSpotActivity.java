@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.yikes.park.R;
-import com.yikes.park.menu.map.coords.YikeSpot;
+import com.yikes.park.menu.map.Objects.YikeSpot;
 import com.yikes.park.menu.profile.data.UserInformation;
 
 public class YikesSpotActivity extends AppCompatActivity {
@@ -36,23 +35,26 @@ public class YikesSpotActivity extends AppCompatActivity {
         String jsonMarker = getIntent().getStringExtra("yikesSpot");
         yikeSpot = gson.fromJson(jsonMarker, YikeSpot.class);
 
-        setUsernameWithId(yikeSpot.getSpotCreator());
+        setUsernameWithId(yikeSpot.getCreator());
 
         TextView name = findViewById(R.id.name);
-        name.setText(yikeSpot.getSpotName());
+        name.setText(yikeSpot.getName());
 
         TextView lat = findViewById(R.id.lat);
-        lat.setText(Double.toString(yikeSpot.getSpotLat()));
+        lat.setText(Double.toString(yikeSpot.getLat()));
 
         TextView lon = findViewById(R.id.lon);
-        lon.setText(Double.toString(yikeSpot.getSpotLong()));
+        lon.setText(Double.toString(yikeSpot.getLon()));
 
-        Glide.with(this).load(yikeSpot.getSpotPicture()).into((ImageView) findViewById(R.id.imageView));
+        TextView id = findViewById(R.id.id);
+        id.setText(yikeSpot.getId());
+
+        Glide.with(this).load(yikeSpot.getPicture()).into((ImageView) findViewById(R.id.imageView));
     }
 
     public void onClick(View view) {
         Intent intent = new Intent(this, externalProfile.class);
-        intent.putExtra("userId", yikeSpot.getSpotCreator());
+        intent.putExtra("userId", yikeSpot.getCreator());
         startActivity(intent);
     }
 

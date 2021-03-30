@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.google.android.libraries.maps.model.Marker;
 import com.google.gson.Gson;
 import com.yikes.park.R;
+import com.yikes.park.menu.map.Objects.SkatePark;
 
 public class SkateParkActivity extends AppCompatActivity {
 
@@ -20,15 +21,18 @@ public class SkateParkActivity extends AppCompatActivity {
         setContentView(R.layout.activity_skate_park);
 
         Gson gson = new Gson();
+
         String jsonMarker = getIntent().getStringExtra("marker");
         simpleMarker marker = gson.fromJson(jsonMarker, simpleMarker.class);
-        Log.d("TAG", marker.toString());
+
+        String jsonPark = getIntent().getStringExtra("skatePark");
+        SkatePark skatePark = gson.fromJson(jsonPark, SkatePark.class);
 
         TextView name = findViewById(R.id.name);
-        name.setText(marker.getName());
+        name.setText(skatePark.getName());
         TextView lat = findViewById(R.id.lat);
-        lat.setText(Double.toString(marker.getLatitude()));
+        lat.setText(Double.toString(skatePark.getLat()));
         TextView lon = findViewById(R.id.lon);
-        lon.setText(Double.toString(marker.getLongitude()));
+        lon.setText(Double.toString(skatePark.getLon()));
     }
 }

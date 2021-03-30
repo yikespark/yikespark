@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -45,6 +47,7 @@ import com.yikes.park.menu.map.coords.SkatePark;
 import com.yikes.park.menu.map.coords.YikeSpot;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
@@ -265,6 +268,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     LatLng spot = new LatLng(yikeSpot.getSpotLat(), yikeSpot.getSpotLong());
                     mMap.addMarker(new MarkerOptions().position(spot).title("YS"+yikeSpot.getId()).icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot))));
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public boolean onMarkerClick(Marker marker) {
                             Gson gson = new Gson();
@@ -274,11 +278,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                     marker.getPosition().longitude
                             );
                             String myJson = gson.toJson(simpleMarker);
-                            Gson gsonYikes = new Gson();
-                            String jsonYikes = gsonYikes.toJson(yikeSpot);
 
                             Log.d("TAG", marker.getTitle());
                             if (marker.getTitle().startsWith("YS")) {
+
+                                String cleanId = marker.getTitle().substring(2);
+
+                                Gson gsonYikes = new Gson();
+                                YikeSpot lol = YikeSpots.stream().filter(yikeSpot1 -> cleanId.equals(yikeSpot1.getId())).findAny().orElse(null);
+
+                                String jsonYikes = gsonYikes.toJson(lol);
+
                                 Intent intent = new Intent(getContext(), YikesSpotActivity.class);
                                 intent.putExtra("marker",myJson);
                                 intent.putExtra("yikesSpot", jsonYikes);

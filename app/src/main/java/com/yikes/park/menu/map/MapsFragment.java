@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -45,16 +47,20 @@ import com.yikes.park.menu.map.coords.SkatePark;
 import com.yikes.park.menu.map.coords.YikeSpot;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LocationManager locationManager;
+    private Marker markerName = null;
+    private Boolean isFirstTime = true;
 
     DatabaseReference dbPark;
     DatabaseReference dbSpot;
     protected ArrayList<SkatePark> SkateParks;
     protected ArrayList<YikeSpot> YikeSpots;
+
 
     public MapsFragment() {
         /* Required empty public constructor */
@@ -104,10 +110,61 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    public static Boolean getLocationWithCheckNetworkAndGPS(Context mContext) {
+        LocationManager lm = (LocationManager)
+                mContext.getSystemService(Context.LOCATION_SERVICE);
+        assert lm != null;
+        boolean isGpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNetworkLocationEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        Boolean finalLoc = null;
+
+        Location networkLoacation = null, gpsLocation = null;
+        if (isGpsEnabled)
+            if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                return null;
+            }
+
+        gpsLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if (isNetworkLocationEnabled)
+            networkLoacation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        if (gpsLocation != null && networkLoacation != null) {
+
+            //smaller the number more accurate result will
+            if (gpsLocation.getAccuracy() > networkLoacation.getAccuracy())
+                return finalLoc = false;
+            else
+                return finalLoc = true;
+
+        } else {
+
+            if (gpsLocation != null) {
+                return finalLoc = true;
+            } else if (networkLoacation != null) {
+                return finalLoc = false;
+            }
+        }
+        return finalLoc;
+    }
+
+    public void setMyLocationMarker(LatLng myLocation) {
+        if (isFirstTime) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
+            isFirstTime = false;
+        }
+        if (markerName != null) {
+            markerName.remove();
+            markerName = null;
+        }
+        Log.d("trackPosition", "onLocationChanged: ");
+        markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        final Marker[] markerName = {null};
-        final Boolean[] isFirstTime = {true};
+
         final double[] currentLocation = {};
         SkateParks = new ArrayList<SkatePark>();
         YikeSpots = new ArrayList<YikeSpot>();
@@ -125,42 +182,50 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         } catch (Resources.NotFoundException e) {
             Log.e("TAG", "Can't find style. Error: ", e);
         }
-        dbPark = FirebaseDatabase.getInstance().getReference().child("skateParks");
-        dbSpot = FirebaseDatabase.getInstance().getReference().child("yikeSpots");
+        dbPark = FirebaseDatabase.getInstance().getReference().child("SkateParks");
+        dbSpot = FirebaseDatabase.getInstance().getReference().child("YikeSpots");
 
         // START Get my current location
         locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 
-
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-
             return;
         }
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
-                MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
+        LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        assert lm != null;
+        Boolean useGPS = getLocationWithCheckNetworkAndGPS(getContext());
+        if (useGPS != null) {
+            if (!useGPS) {
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 1, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+                        MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
+                        MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
 
-//                currentLocation[0] = location.getLatitude();
-//                currentLocation[1] = location.getLongitude();
-                if (isFirstTime[0]) {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
-                    isFirstTime[0] = false;
-                }
-                if (markerName[0] != null) {
-                    markerName[0].remove();
-                    markerName[0] = null;
-                }
-                if (markerName[0] == null) {
-                    markerName[0] = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
-                }
+                        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        setMyLocationMarker(myLocation);
 
+
+                    }
+                });
+            } else if (useGPS) {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 1, new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+                        MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(location.getLatitude())).apply();
+                        MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(location.getLongitude())).apply();
+
+                        LatLng myLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        setMyLocationMarker(myLocation);
+                    }
+                });
             }
-        });
+
+            //currentLocation[0] = location.getLatitude();
+            //currentLocation[1] = location.getLongitude();
+        }
         // END Get my current location
 
         ////////////////////// Firebase Skateparks //////////////////////
@@ -201,8 +266,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     YikeSpot yikeSpot = postSnapshot.getValue(YikeSpot.class);
                     YikeSpots.add(yikeSpot);
                     LatLng spot = new LatLng(yikeSpot.getSpotLat(), yikeSpot.getSpotLong());
-                    mMap.addMarker(new MarkerOptions().position(spot).title("YikeSpot "+ yikeSpot.getSpotName()).icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot))));
+                    mMap.addMarker(new MarkerOptions().position(spot).title("YS"+yikeSpot.getId()).icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot))));
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public boolean onMarkerClick(Marker marker) {
                             Gson gson = new Gson();
@@ -212,11 +278,17 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                     marker.getPosition().longitude
                             );
                             String myJson = gson.toJson(simpleMarker);
-                            Gson gsonYikes = new Gson();
-                            String jsonYikes = gsonYikes.toJson(yikeSpot);
 
                             Log.d("TAG", marker.getTitle());
-                            if (marker.getTitle().startsWith("YikeSpot")) {
+                            if (marker.getTitle().startsWith("YS")) {
+
+                                String cleanId = marker.getTitle().substring(2);
+
+                                Gson gsonYikes = new Gson();
+                                YikeSpot lol = YikeSpots.stream().filter(yikeSpot1 -> cleanId.equals(yikeSpot1.getId())).findAny().orElse(null);
+
+                                String jsonYikes = gsonYikes.toJson(lol);
+
                                 Intent intent = new Intent(getContext(), YikesSpotActivity.class);
                                 intent.putExtra("marker",myJson);
                                 intent.putExtra("yikesSpot", jsonYikes);
@@ -232,7 +304,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         }
                     });
                 }
-                dbSpot.setValue(YikeSpots);
+
+                Log.d("YikeSPots", YikeSpots.toString());
+                //dbSpot.setValue(YikeSpots);
             }
 
             @Override

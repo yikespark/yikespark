@@ -2,13 +2,11 @@ package com.yikes.park.menu.map;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -20,12 +18,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.maps.model.Marker;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,48 +30,52 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
+import com.google.firebase.storage.UploadTask;
 import com.yikes.park.R;
+import com.yikes.park.getUserData;
 import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.coords.YikeSpot;
 import com.yikes.park.menu.profile.data.UserInformation;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
 
 public class NewYikeSpot extends AppCompatActivity {
     DatabaseReference dbSpot;
-    protected ArrayList<YikeSpot> YikeSpots;
+    String superUrl;
+    UploadTask uploadTask;
     private UserInformation myUser;
-    private Button add_img_from_gallery;
     private ImageView spot_img;
-    private String imgUrl = "";
     private Uri uri;
-    private File photoFile;
-
     private ImageView add_img_from_camera;
 
-    private long yikeID = 0;
+    public NewYikeSpot() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        dbSpot = FirebaseDatabase.getInstance().getReference().child("yikeSpots");
-        YikeSpots = new ArrayList<YikeSpot>();
+        String spotID = UUID.randomUUID().toString();
+        dbSpot = FirebaseDatabase.getInstance().getReference().child("YikeSpots").child(spotID);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_newspot);
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        /** Loads user information */
-        Gson gson = new Gson();
-        String json = MainActivity.sharedPref.getString(MainActivity.MY_USER_KEY,null);
-        myUser = gson.fromJson(json, UserInformation.class);
-        waitForDataFetch();
+        /* Loads user information */
+        new getUserData().UserData(new getUserData.Call() {
+            @Override
+            public void onCallback(UserInformation value) {
+                Log.d("onCallback", value.toString());
+                myUser = value;
+            }
+        });
 
         spot_img = findViewById(R.id.image_yikespot);
 
-        add_img_from_gallery = findViewById(R.id.image_yikespot_btn);
+        Button add_img_from_gallery = findViewById(R.id.image_yikespot_btn);
         add_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,49 +109,83 @@ public class NewYikeSpot extends AppCompatActivity {
 //        });
 
         final Button button = findViewById(R.id.newSpot);
+
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                double myLatitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LATITUDE_KEY,"0"));
-                double myLongitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LONGITUDE_KEY,"0"));
-
-                StorageReference storageRef = storage.getReference();
-
-                StorageReference Folder = storageRef.child("yikeSpot");
-
-                StorageReference file_name = Folder.child(newSpotName.getText().toString());
-
+                double myLatitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LATITUDE_KEY, "0"));
+                double myLongitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LONGITUDE_KEY, "0"));
                 if (uri != null) { // If no URI, then put a default one
-                    file_name.putFile(uri).addOnSuccessListener(taskSnapshot -> file_name.getDownloadUrl().addOnSuccessListener(furi -> {
+                    StorageReference storageRef = storage.getReference();
+                    StorageReference Folder = storageRef.child("yikeSpot/" + uri.getLastPathSegment());
+
+                    String uriPath = getPathFromInputStreamUri(getBaseContext(), uri);
+
+                    Uri file = Uri.fromFile(new File(uriPath));
+
+                    uploadTask = Folder.putFile(file);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            Log.d("onFailure", exception.getMessage());
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            // ...
+                            Log.d("Metadata", String.valueOf(taskSnapshot.getMetadata().getSizeBytes()));
+                            final StorageReference ref = storageRef.child("yikeSpot/" + uri.getLastPathSegment());
+                            uploadTask = ref.putFile(file);
+                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+                                    // Continue with the task to get the download URL
+                                    return ref.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        Uri downloadUri = task.getResult();
+                                        Log.d("SUEPRURL", downloadUri.toString());
+                                        superUrl = downloadUri.toString();
+                                        YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, myUser.getId(), superUrl, spotID);
+                                        dbSpot.setValue(yikeSpot);
+                                        finish();
+                                    } else {
+                                        // Handle failures
+                                        // ...
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    Log.i("imgURI", uri.getPath());
+                    /*file_name.putFile(uri).addOnSuccessListener(taskSnapshot -> file_name.getDownloadUrl().addOnSuccessListener(furi -> {
                         imgUrl = String.valueOf(furi);
-                        Log.i("imgURI", imgUrl);
-                    }));
+                        Log.i("imgURL", imgUrl);
+                    }));*/
                 } else {
                     /** TODO
                      *  Se debe añadir una imagen por defecto en caso de que el usuario no añada ninguna imagen:
                      *  imgURL = AÑADIR UNA URI POR DEFECTO;
                      */
                 }
-
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, myUser.getId(), imgUrl);
-                        YikeSpots.add(yikeSpot);
-                        dbSpot.setValue(YikeSpots);
-                    }
-                }, 5050);
-
             }
         });
 
-        dbSpot.addValueEventListener(new ValueEventListener() {
+        /*dbSpot.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                yikeID = dataSnapshot.getChildrenCount(); // Stores the last item ID in the DB
                 YikeSpots.clear();
 
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     YikeSpot yikeSpot = postSnapshot.getValue(YikeSpot.class);
                     YikeSpots.add(yikeSpot);
                 }
@@ -161,19 +196,68 @@ public class NewYikeSpot extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.i("logTest", "EFailed to read value.", error.toException());
             }
-        });
+        });*/
     }
 
-    /** User profile related stuff */
-    private void waitForDataFetch() {
-        if (myUser != null) {
-            // MyUser has data and can be used
-        } else {
-            waitForDataFetch();
+    public String getPathFromInputStreamUri(Context context, Uri uri) {
+        InputStream inputStream = null;
+        String filePath = null;
+
+        if (uri.getAuthority() != null) {
+            try {
+                inputStream = context.getContentResolver().openInputStream(uri);
+                File photoFile = createTemporalFileFrom(inputStream);
+
+                filePath = photoFile.getPath();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
+        return filePath;
     }
 
-    /** Image related stuff */
+    private File createTemporalFileFrom(InputStream inputStream) throws IOException {
+        File targetFile = null;
+
+        if (inputStream != null) {
+            int read;
+            byte[] buffer = new byte[8 * 1024];
+
+            targetFile = createTemporalFile();
+            OutputStream outputStream = new FileOutputStream(targetFile);
+
+            while ((read = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, read);
+            }
+            outputStream.flush();
+
+            try {
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return targetFile;
+    }
+
+    private File createTemporalFile() {
+        return new File(this.getFilesDir(), "tempPicture.jpg");
+    }
+
+    /**
+     * Image related stuff
+     */
     private void loadImageFromGalery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 10);
@@ -200,12 +284,12 @@ public class NewYikeSpot extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         Bitmap bitmap = null;
-        if(requestCode == 10 && resultCode == RESULT_OK){
+        if (requestCode == 10 && resultCode == RESULT_OK) {
             uri = data.getData();
             try {
                 bitmap = MediaStore.Images.Media
                         .getBitmap(getContentResolver(), uri);
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -229,7 +313,7 @@ public class NewYikeSpot extends AppCompatActivity {
             }
         }
 
-        if(bitmap != null){
+        if (bitmap != null) {
             spot_img.setImageBitmap(bitmap);
         }
     }

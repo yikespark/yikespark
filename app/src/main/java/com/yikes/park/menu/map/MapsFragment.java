@@ -45,6 +45,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.yikes.park.R;
+import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.Objects.SkatePark;
 import com.yikes.park.menu.map.Objects.YikeSpot;
 
@@ -87,6 +88,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 myLocation = new Location(arrayList.get(0));
 
                 if (!new LatLng(myLocation.getLatitude(), myLocation.getLongitude()).equals(myLocationCoordinates)){
+                    MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(myLocation.getLatitude())).apply();
+                    MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(myLocation.getLongitude())).apply();
                     myLocationCoordinates = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                     setMyLocationMarker(myLocationCoordinates);
                 }

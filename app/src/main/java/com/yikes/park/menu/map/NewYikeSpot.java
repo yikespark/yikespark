@@ -5,6 +5,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +36,7 @@ import com.yikes.park.getUserData;
 import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.Objects.YikeSpot;
 import com.yikes.park.menu.profile.data.UserInformation;
+import com.yikes.park.util.LoadingAlert;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,6 +54,8 @@ public class NewYikeSpot extends AppCompatActivity {
     private Uri uri;
     private ImageView add_img_from_camera;
 
+    private LoadingAlert loading;
+
     public NewYikeSpot() {
     }
 
@@ -61,6 +67,8 @@ public class NewYikeSpot extends AppCompatActivity {
         setContentView(R.layout.activity_newspot);
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
+        loading = new LoadingAlert(this);
+
         /* Loads user information */
         new getUserData().UserData(new getUserData.Call() {
             @Override
@@ -70,21 +78,21 @@ public class NewYikeSpot extends AppCompatActivity {
             }
         });
 
+        /* Upload image buttons */
         spot_img = findViewById(R.id.image_yikespot);
+        add_img_from_camera = spot_img;
+        add_img_from_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadImageFromCamera();
+            }
+        });
 
         Button add_img_from_gallery = findViewById(R.id.image_yikespot_btn);
         add_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loadImageFromGalery();
-            }
-        });
-
-        add_img_from_camera = spot_img;
-        add_img_from_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadImageFromCamera();
             }
         });
 
@@ -110,69 +118,86 @@ public class NewYikeSpot extends AppCompatActivity {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                double myLatitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LATITUDE_KEY, "0"));
-                double myLongitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LONGITUDE_KEY, "0"));
-                if (uri != null) { // If no URI, then put a default one
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference Folder = storageRef.child("yikeSpot/" + uri.getLastPathSegment());
+                //Log.i("Checar", String.valueOf(newSpotName.getText()));
 
-                    String uriPath = getPathFromInputStreamUri(getBaseContext(), uri);
+                if (String.valueOf(newSpotName.getText()).equals("")) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Error! The spot name cannot be empty!", Toast.LENGTH_LONG);
+                    toast.show();
 
-                    Uri file = Uri.fromFile(new File(uriPath));
+                } else {
+                    double myLatitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LATITUDE_KEY, "0"));
+                    double myLongitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LONGITUDE_KEY, "0"));
+                    loading.startLoading();
 
-                    uploadTask = Folder.putFile(file);
-                    uploadTask.addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle unsuccessful uploads
-                            Log.d("onFailure", exception.getMessage());
-                        }
-                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                            // ...
-                            Log.d("Metadata", String.valueOf(taskSnapshot.getMetadata().getSizeBytes()));
-                            final StorageReference ref = storageRef.child("yikeSpot/" + uri.getLastPathSegment());
-                            uploadTask = ref.putFile(file);
-                            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                                @Override
-                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                    if (!task.isSuccessful()) {
-                                        throw task.getException();
+                    if (uri != null) { // If no URI, then put a default one
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference Folder = storageRef.child("yikeSpot/" + uri.getLastPathSegment());
+
+                        String uriPath = getPathFromInputStreamUri(getBaseContext(), uri);
+
+                        Uri file = Uri.fromFile(new File(uriPath));
+
+                        uploadTask = Folder.putFile(file);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                Log.d("onFailure", exception.getMessage());
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                // ...
+
+                                Log.d("Metadata", String.valueOf(taskSnapshot.getMetadata().getSizeBytes()));
+                                final StorageReference ref = storageRef.child("yikeSpot/" + uri.getLastPathSegment());
+                                uploadTask = ref.putFile(file);
+                                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                    @Override
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        if (!task.isSuccessful()) {
+                                            Toast toast = Toast.makeText(getApplicationContext(), "An error has occurred!", Toast.LENGTH_LONG);
+                                            toast.show();
+                                            throw task.getException();
+                                        } else {
+                                            Toast toast = Toast.makeText(getApplicationContext(), "Successfully added!", Toast.LENGTH_LONG);
+                                            toast.show();
+                                        }
+                                        // Continue with the task to get the download URL
+                                        return ref.getDownloadUrl();
                                     }
-                                    // Continue with the task to get the download URL
-                                    return ref.getDownloadUrl();
-                                }
-                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Uri> task) {
-                                    if (task.isSuccessful()) {
-                                        Uri downloadUri = task.getResult();
-                                        Log.d("SUEPRURL", downloadUri.toString());
-                                        superUrl = downloadUri.toString();
-                                        YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, myUser.getId(), superUrl, spotID);
-                                        dbSpot.setValue(yikeSpot);
-                                        finish();
-                                    } else {
-                                        // Handle failures
-                                        // ...
+                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            loading.finishLoading();
+                                            Uri downloadUri = task.getResult();
+                                            Log.d("SUEPRURL", downloadUri.toString());
+                                            superUrl = downloadUri.toString();
+                                            YikeSpot yikeSpot = new YikeSpot(newSpotName.getText().toString(), myLatitude, myLongitude, myUser.getId(), superUrl, spotID);
+                                            dbSpot.setValue(yikeSpot);
+                                            finish();
+                                        } else {
+                                            // Handle failures
+                                            // ...
+                                        }
                                     }
-                                }
-                            });
-                        }
-                    });
+                                });
+                            }
+                        });
 
-                    Log.i("imgURI", uri.getPath());
+                        Log.i("imgURI", uri.getPath());
                     /*file_name.putFile(uri).addOnSuccessListener(taskSnapshot -> file_name.getDownloadUrl().addOnSuccessListener(furi -> {
                         imgUrl = String.valueOf(furi);
                         Log.i("imgURL", imgUrl);
                     }));*/
-                } else {
-                    /** TODO
-                     *  Se debe añadir una imagen por defecto en caso de que el usuario no añada ninguna imagen:
-                     *  imgURL = AÑADIR UNA URI POR DEFECTO;
-                     */
+                    } else {
+                        /** TODO
+                         *  Se debe añadir una imagen por defecto en caso de que el usuario no añada ninguna imagen:
+                         *  imgURL = AÑADIR UNA URI POR DEFECTO;
+                         */
+                    }
                 }
             }
         });

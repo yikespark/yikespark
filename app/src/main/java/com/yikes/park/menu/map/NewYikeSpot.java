@@ -1,12 +1,12 @@
 package com.yikes.park.menu.map;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,6 +20,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,6 +48,10 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 public class NewYikeSpot extends AppCompatActivity {
+    private static final int CAMERA_REQUEST_CODE = 127;
+    private static final int GALLERY_REQUEST_CODE = 128;
+
+
     DatabaseReference dbSpot;
     String superUrl;
     UploadTask uploadTask;
@@ -84,7 +90,11 @@ public class NewYikeSpot extends AppCompatActivity {
         add_img_from_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadImageFromCamera();
+                if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+                } else {
+                    loadImageFromCamera();
+                }
             }
         });
 
@@ -92,7 +102,12 @@ public class NewYikeSpot extends AppCompatActivity {
         add_img_from_gallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadImageFromGalery();
+
+                if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQUEST_CODE);
+                } else {
+                    loadImageFromGallery();
+                }
             }
         });
 
@@ -280,7 +295,7 @@ public class NewYikeSpot extends AppCompatActivity {
     /**
      * Image related stuff
      */
-    private void loadImageFromGalery() {
+    private void loadImageFromGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 10);
     }
@@ -334,9 +349,22 @@ public class NewYikeSpot extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
         if (bitmap != null) {
             spot_img.setImageBitmap(bitmap);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // The user now has camera permissions
+            }
+        } else if (requestCode == GALLERY_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // The user now has gallery permissions
+            }
         }
     }
 }

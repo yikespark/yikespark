@@ -7,15 +7,34 @@
     android:orientation="vertical"
     android:layout_margin="16dp">
 
+    <TextView
+        android:id="@+id/interfaceHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Interface"
+        android:textSize="20dp"
+        android:paddingTop="15dp"
+        android:textColor="@color/app_gray_title_text_color"
+        ></TextView>
+
     <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginTop="5dp"
         android:id="@+id/text_input_lenguage"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/Language"
         android:orientation="horizontal"
+        app:helperTextTextColor="@color/app_white_text_color"
         app:endIconMode="dropdown_menu"
-        app:startIconDrawable="@drawable/abc_vector_test">
+        app:boxBackgroundColor="@color/app_element_color"
+        app:hintTextColor="@color/app_white_text_color"
+        android:textColorHint="@color/app_white_text_color"
+        app:startIconDrawable="@drawable/ic_language_24dp"
+        app:endIconTint="@color/app_white_text_color"
+        app:startIconTint="@color/app_white_text_color"
+        app:boxStrokeColor="@color/app_white_text_color"
+        >
 
         <AutoCompleteTextView
             android:id="@+id/dropdown_text"
@@ -25,27 +44,140 @@
             android:editable="false"
             android:focusable="true"
             android:inputType="none"
-            tools:ignore="Deprecated,LabelFor" />
+            tools:ignore="Deprecated,LabelFor"
+            android:textColor="@color/app_white_text_color"
+            android:textColorHint="@color/app_white_text_color"
+            android:background="@color/app_element_color"/>
+        <Button
+            android:id="@+id/settings_save_btn"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/txtSave"
+            app:icon="@drawable/ic_save_24px"
+            app:iconPadding="-32dp"
+            tools:ignore="HardcodedText" />
 
+        <!-- These cards actually does not belongs here, but I'm too lazy to find a way to change colors -->
+        <TextView
+            android:id="@+id/permissionsHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Permissions"
+            android:textSize="20dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/app_gray_title_text_color"
+            ></TextView>
+        <androidx.cardview.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/notificationsCard"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="4dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            app:cardBackgroundColor="@color/app_element_color">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/notificationsSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:checked="true"
+                android:drawableLeft="@drawable/ic_bell_24px"
+                android:drawableTint="@color/app_white_text_color"
+                android:textColor="@color/app_white_text_color"
+                android:paddingLeft="5dp"
+                android:drawablePadding="7dp"
+                android:text="Enable Notifications"/>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/geolocationCard"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="4dp"
+            android:layout_marginBottom="5dp"
+            app:cardBackgroundColor="@color/app_element_color">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/geolocationSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:checked="true"
+                android:drawableLeft="@drawable/ic_planet_24px"
+                android:textColor="@color/app_white_text_color"
+                android:drawableTint="@color/app_white_text_color"
+                android:drawablePadding="7dp"
+                android:text="Enable Geolocation"
+                android:paddingLeft="5dp"/>
+
+        </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cameraCard"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="4dp"
+            android:layout_marginBottom="5dp"
+            app:cardBackgroundColor="@color/app_element_color">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/cameraSwitch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:checked="true"
+                android:drawableLeft="@drawable/ic_camera_24px"
+                android:drawablePadding="7dp"
+                android:textColor="@color/app_white_text_color"
+                android:text="Enable Camera"
+                android:drawableTint="@color/app_white_text_color"
+                android:paddingLeft="5dp"
+                />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/galleryCard"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            card_view:cardCornerRadius="4dp"
+            app:cardBackgroundColor="@color/app_element_color">
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/gallerySwitch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:checked="true"
+                android:drawableLeft="@drawable/ic_folder_black_24dp"
+                android:drawablePadding="7dp"
+                android:textColor="@color/app_white_text_color"
+                android:text="Enable Gallery"
+                android:drawableTint="@color/app_white_text_color"
+                android:paddingLeft="5dp"
+                />
+        </androidx.cardview.widget.CardView>
     </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/settings_save_btn"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/accountHeader"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/txtSave"
-        app:icon="@drawable/ic_save_24px"
-        app:iconPadding="-32dp"
-        tools:ignore="HardcodedText" />
-
+        android:text="Account"
+        android:textSize="20dp"
+        android:paddingTop="5dp"
+        android:textColor="@color/app_gray_title_text_color"
+        ></TextView>
     <Button
         android:id="@+id/settings_logout_btn"
         style="@style/Widget.MaterialComponents.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+
         android:text="Logout"
         app:icon="@drawable/ic_logout_24px"
         app:iconPadding="-32dp"

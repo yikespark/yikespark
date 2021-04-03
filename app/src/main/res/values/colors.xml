@@ -12,5 +12,6 @@
     <color name="app_bg_color">#121212</color>
     <color name="app_element_color">#1D1D1D</color>
     <color name="app_white_text_color">#E7E7E7</color>
+    <color name="app_gray_title_text_color">#A2A2A2</color>
     <color name="app_error_color">#CF6679</color>
 </resources>

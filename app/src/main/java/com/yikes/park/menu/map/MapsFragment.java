@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -57,6 +58,8 @@ import java.util.Objects;
 import mumayank.com.airlocationlibrary.AirLocation;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
+
+    Snackbar permissionsWarning;
 
     DatabaseReference dbPark;
     DatabaseReference dbSpot;
@@ -107,14 +110,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         /** Checks if user has the GPS disabled, if so, a message is shown */
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Snackbar snack = Snackbar.make(getActivity().findViewById(android.R.id.content), "Your GPS is disabled", Snackbar.LENGTH_INDEFINITE);
-            snack.setAction("ENABLE", new gpsActivation());
+            permissionsWarning = Snackbar.make(getActivity().findViewById(android.R.id.content), "You have important permissions disabled!", Snackbar.LENGTH_INDEFINITE);
+            permissionsWarning.setAction("CLOSE", new dissmissWarning());
 
-            View view = snack.getView();
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
-            params.gravity = Gravity.CENTER;
+            View view = permissionsWarning.getView();
+            // FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(0, 100, 0, 0);
+            //params.gravity = Gravity.BOTTOM;
             view.setLayoutParams(params);
-            snack.show();
+            permissionsWarning.show();
         }
 
         FloatingActionButton button = rootView.findViewById(R.id.plus);
@@ -260,10 +268,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-    public class gpsActivation implements View.OnClickListener {
+    public class dissmissWarning implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+            //startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+            permissionsWarning.dismiss();
         }
     }
 }

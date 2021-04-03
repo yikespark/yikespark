@@ -190,7 +190,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     mMap.addMarker(
                             new MarkerOptions()
                                     .position(park)
-                                    .title("SP" + skatePark.getId())
+                                    .title("SP: " + skatePark.getName())
                                     .icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_ramp)))
                     )
                             .setTag(skatePark);
@@ -216,15 +216,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     mMap.addMarker(
                             new MarkerOptions()
                                     .position(spot)
-                                    .title("YS" + yikeSpot.getId())
+                                    .title("YS: " + yikeSpot.getName())
                                     .icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot)))
                     )
                             .setTag(yikeSpot);
 
-                    mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.N)
+                    mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
-                        public boolean onMarkerClick(Marker marker) {
+                        public void onInfoWindowClick(Marker marker) {
                             Log.d("onMarkerClick", marker.getTitle());
 
                             Gson gson = new Gson();
@@ -234,7 +233,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                     marker.getPosition().longitude
                             );
                             String myJson = gson.toJson(simpleMarker);
-
                             if (marker.getTitle().startsWith("YS")) {
                                 Gson gsonYikes = new Gson();
                                 YikeSpot spotFromMarker = (YikeSpot) marker.getTag();
@@ -243,7 +241,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                 intent.putExtra("marker", myJson);
                                 intent.putExtra("yikesSpot", jsonYikes);
                                 startActivity(intent);
-                                return true;
                             }
                             if (marker.getTitle().startsWith("SP")) {
                                 Gson gsonPark = new Gson();
@@ -253,11 +250,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                 intent.putExtra("marker", myJson);
                                 intent.putExtra("skatePark", jsonYikes);
                                 startActivity(intent);
-                                return true;
                             }
-                            return false;
-                        }
-                    });
+                        }});
+
                 }
             }
 

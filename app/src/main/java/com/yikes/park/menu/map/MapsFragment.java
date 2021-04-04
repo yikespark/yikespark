@@ -82,31 +82,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-
-        AirLocation mAirLocation = new AirLocation(requireActivity(), new AirLocation.Callback() {
-            @Override
-            public void onSuccess(@NotNull ArrayList<Location> arrayList) {
-                Log.d("AirLocation", "onSucess. Location details: " + arrayList);
-                myLocation = new Location(arrayList.get(0));
-
-                if (!new LatLng(myLocation.getLatitude(), myLocation.getLongitude()).equals(myLocationCoordinates)){
-                    MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(myLocation.getLatitude())).apply();
-                    MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(myLocation.getLongitude())).apply();
-                    myLocationCoordinates = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                    setMyLocationMarker(myLocationCoordinates);
-                }
-            }
-
-            @Override
-            public void onFailure(@NotNull AirLocation.LocationFailedEnum locationFailedEnum) {
-                Log.d("AirLocation", "onFailure: " + locationFailedEnum);
-            }
-        }, false,1000, "Please enable location permissions for this app to work.");
-
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(this);
-        }
 
         /** Checks if user has the GPS disabled, if so, a message is shown */
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -125,15 +100,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             permissionsWarning.show();
         }
 
-        FloatingActionButton button = rootView.findViewById(R.id.plus);
-        button.setOnClickListener(new View.OnClickListener() {
+        /** Sets the current user position */
+        setUpMyLocation();
+
+        // Buttons
+        FloatingActionButton addNewSpotBtn = rootView.findViewById(R.id.plus);
+        addNewSpotBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openNewActivity();
             }
         });
 
-        mAirLocation.start();
+        FloatingActionButton goToMyLocBtn = rootView.findViewById(R.id.centerCamera);
+        goToMyLocBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15.3432f));
+            }
+        });
 
         return rootView;
     }
@@ -156,15 +141,41 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
 
-        final double[] currentLocation = {};
-        mMap = googleMap;
+    /** This method is need in order to update the information when the screen is resumed */
+    public void setUpMyLocation() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        AirLocation mAirLocation = new AirLocation(requireActivity(), new AirLocation.Callback() {
+            @Override
+            public void onSuccess(@NotNull ArrayList<Location> arrayList) {
+                Log.d("AirLocation", "onSucess. Location details: " + arrayList);
+                myLocation = new Location(arrayList.get(0));
+
+                if (!new LatLng(myLocation.getLatitude(), myLocation.getLongitude()).equals(myLocationCoordinates)){
+                    MainActivity.sharedPref.edit().putString(MainActivity.LATITUDE_KEY, String.valueOf(myLocation.getLatitude())).apply();
+                    MainActivity.sharedPref.edit().putString(MainActivity.LONGITUDE_KEY, String.valueOf(myLocation.getLongitude())).apply();
+                    myLocationCoordinates = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                    setMyLocationMarker(myLocationCoordinates);
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull AirLocation.LocationFailedEnum locationFailedEnum) {
+                Log.d("AirLocation", "onFailure: " + locationFailedEnum);
+            }
+        }, false,1000, "Please enable location permissions for this app to work.");
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+        mAirLocation.start();
+    }
+
+
+    public void setUpMap() {
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            boolean success = googleMap.setMapStyle(
+            boolean success = mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             getContext(), R.raw.style_json));
 
@@ -191,6 +202,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                             new MarkerOptions()
                                     .position(park)
                                     .title("SP: " + skatePark.getName())
+                                    .snippet("Tab for more info!")
                                     .icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_ramp)))
                     )
                             .setTag(skatePark);
@@ -217,6 +229,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                             new MarkerOptions()
                                     .position(spot)
                                     .title("YS: " + yikeSpot.getName())
+                                    .snippet("Tab for more info!")
                                     .icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot)))
                     )
                             .setTag(yikeSpot);
@@ -263,11 +276,31 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        setUpMap();
+    }
+
     public class dissmissWarning implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             //startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
             permissionsWarning.dismiss();
+        }
+    }
+
+    /** TODO: Watchout this code needs some testing! Not sure if it works properly!
+     * This part of the code is called when you come back to the map from another screen (Eg: When you remove a YikeSpot from YikeSpotActivity) */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMap == null) {
+            ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+        } else {
+            mMap.clear();
+            setMyLocationMarker(myLocationCoordinates);
+            setUpMap();
         }
     }
 }

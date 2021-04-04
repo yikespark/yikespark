@@ -14,7 +14,7 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="160dp"
         app:srcCompat="@drawable/ic_image_default_24px" />
 
     <LinearLayout
@@ -95,5 +95,11 @@
             android:layout_height="wrap_content"
             android:text="TextView" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/removeSpot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Remove" />
 
 </LinearLayout>

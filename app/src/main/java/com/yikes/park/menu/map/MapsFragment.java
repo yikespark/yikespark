@@ -108,8 +108,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         /** Sets the current user position */
         setUpMyLocation();
 
+
         // Buttons
         FloatingActionButton addNewSpotBtn = rootView.findViewById(R.id.plus);
+        FloatingActionButton goToMyLocBtn = rootView.findViewById(R.id.centerCamera);
+
+        // If the user has Geoloc disabled, the user can't add a new Spot or Center the camera
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+            addNewSpotBtn.setVisibility(View.GONE);
+            goToMyLocBtn.setVisibility(View.GONE);
+        } else {
+            addNewSpotBtn.setVisibility(View.VISIBLE);
+            goToMyLocBtn.setVisibility(View.VISIBLE);
+        }
+
         addNewSpotBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,11 +129,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        FloatingActionButton goToMyLocBtn = rootView.findViewById(R.id.centerCamera);
         goToMyLocBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15.3432f));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15.3432f));
             }
         });
 
@@ -134,16 +145,21 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void setMyLocationMarker(LatLng myLocation) {
-        if (isFirstTime) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
-            isFirstTime = false;
+
+        if (myLocationCoordinates == null) {
+            // Do nothing
+        } else {
+            if (isFirstTime) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 15.3432f));
+                isFirstTime = false;
+            }
+            if (markerName != null) {
+                markerName.remove();
+                markerName = null;
+            }
+            //markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
+            markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title(getString(R.string.map_your_location)).icon((bitmapDescriptorFromVector(getActivity(), R.drawable.ic_skater_multilayer))));
         }
-        if (markerName != null) {
-            markerName.remove();
-            markerName = null;
-        }
-        //markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
-        markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title(getString(R.string.map_your_location)).icon((bitmapDescriptorFromVector(getActivity(), R.drawable.ic_skater_multilayer))));
     }
 
 

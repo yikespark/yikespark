@@ -45,7 +45,9 @@
         <activity
             android:name=".menu.MainActivity"
             android:label="ui" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity"
+            android:hardwareAccelerated="false"
+            />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

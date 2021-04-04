@@ -50,6 +50,7 @@ import java.util.UUID;
 public class NewYikeSpot extends AppCompatActivity {
     private static final int CAMERA_REQUEST_CODE = 127;
     private static final int GALLERY_REQUEST_CODE = 128;
+    private static final int GALLERY_REQUEST_WRITE_CODE = 129;
 
 
     DatabaseReference dbSpot;
@@ -92,6 +93,8 @@ public class NewYikeSpot extends AppCompatActivity {
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
                     ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+                } else if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY_REQUEST_WRITE_CODE);
                 } else {
                     loadImageFromCamera();
                 }
@@ -105,6 +108,8 @@ public class NewYikeSpot extends AppCompatActivity {
 
                 if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                     ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQUEST_CODE);
+                } else if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY_REQUEST_WRITE_CODE);
                 } else {
                     loadImageFromGallery();
                 }

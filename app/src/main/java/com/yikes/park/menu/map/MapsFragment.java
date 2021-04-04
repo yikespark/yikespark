@@ -90,8 +90,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         /** Checks if user has the GPS disabled, if so, a message is shown */
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsWarning = Snackbar.make(getActivity().findViewById(android.R.id.content), "You have important permissions disabled!", Snackbar.LENGTH_INDEFINITE);
-            permissionsWarning.setAction("CLOSE", new dissmissWarning());
+            permissionsWarning = Snackbar.make(getActivity().findViewById(android.R.id.content), R.string.map_warning_permissions_disabled, Snackbar.LENGTH_INDEFINITE);
+            permissionsWarning.setAction(R.string.map_warning_permissions_disabled_close, new dissmissWarning());
 
             View view = permissionsWarning.getView();
             // FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
@@ -143,7 +143,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             markerName = null;
         }
         //markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
-        markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((bitmapDescriptorFromVector(getActivity(), R.drawable.ic_skater_multilayer))));
+        markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title(getString(R.string.map_your_location)).icon((bitmapDescriptorFromVector(getActivity(), R.drawable.ic_skater_multilayer))));
     }
 
 
@@ -207,7 +207,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                             new MarkerOptions()
                                     .position(park)
                                     .title("SP: " + skatePark.getName())
-                                    .snippet("Tab for more info!")
+                                    .snippet(getString(R.string.map_mark_snippet))
                                     .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_skatepark_multilayer))
                                     //.icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_ramp)))
                     )
@@ -235,7 +235,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                             new MarkerOptions()
                                     .position(spot)
                                     .title("YS: " + yikeSpot.getName())
-                                    .snippet("Tab for more info!")
+                                    .snippet(getString(R.string.map_mark_snippet))
                                     .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_yikespot_multilayer))
                                     //.icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot)))
                     )

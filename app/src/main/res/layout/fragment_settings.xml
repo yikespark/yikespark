@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/app_bg_color"
     android:layout_margin="16dp">
 
     <TextView
         android:id="@+id/interfaceHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Interface"
+        android:text="@string/settings_language_header"
         android:textSize="20dp"
         android:paddingTop="15dp"
         android:textColor="@color/app_gray_title_text_color"
@@ -19,11 +20,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_marginTop="5dp"
-        android:id="@+id/text_input_lenguage"
+        android:id="@+id/text_input_language"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/Language"
+        android:hint="@string/settings_hint_language"
         android:orientation="horizontal"
         app:helperTextTextColor="@color/app_white_text_color"
         app:endIconMode="dropdown_menu"
@@ -53,7 +54,7 @@
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/txtSave"
+            android:text="@string/settings_save_btn"
             app:icon="@drawable/ic_save_24px"
             app:iconPadding="-32dp"
             tools:ignore="HardcodedText" />
@@ -63,7 +64,7 @@
             android:id="@+id/permissionsHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Permissions"
+            android:text="@string/settings_permissions_header"
             android:textSize="20dp"
             android:paddingTop="5dp"
             android:textColor="@color/app_gray_title_text_color"
@@ -89,7 +90,7 @@
                 android:textColor="@color/app_white_text_color"
                 android:paddingLeft="5dp"
                 android:drawablePadding="7dp"
-                android:text="Enable Notifications"/>
+                android:text="@string/settings_e_notifications"/>
         </androidx.cardview.widget.CardView>
 
 
@@ -112,7 +113,7 @@
                 android:textColor="@color/app_white_text_color"
                 android:drawableTint="@color/app_white_text_color"
                 android:drawablePadding="7dp"
-                android:text="Enable Geolocation"
+                android:text="@string/settings_e_geoloc"
                 android:paddingLeft="5dp"/>
 
         </androidx.cardview.widget.CardView>
@@ -134,7 +135,7 @@
                 android:drawableLeft="@drawable/ic_camera_24px"
                 android:drawablePadding="7dp"
                 android:textColor="@color/app_white_text_color"
-                android:text="Enable Camera"
+                android:text="@string/settings_e_camera"
                 android:drawableTint="@color/app_white_text_color"
                 android:paddingLeft="5dp"
                 />
@@ -157,7 +158,7 @@
                 android:drawableLeft="@drawable/ic_folder_black_24dp"
                 android:drawablePadding="7dp"
                 android:textColor="@color/app_white_text_color"
-                android:text="Enable Gallery"
+                android:text="@string/settings_e_Gallery"
                 android:drawableTint="@color/app_white_text_color"
                 android:paddingLeft="5dp"
                 />
@@ -167,7 +168,7 @@
         android:id="@+id/accountHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Account"
+        android:text="@string/settings_account_header"
         android:textSize="20dp"
         android:paddingTop="5dp"
         android:textColor="@color/app_gray_title_text_color"
@@ -178,7 +179,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:text="Logout"
+        android:text="@string/settings_logout_btn"
         app:icon="@drawable/ic_logout_24px"
         app:iconPadding="-32dp"
         tools:ignore="HardcodedText" />

@@ -103,7 +103,7 @@ public class PreferencesFragment extends Fragment {
 
         dropDownText = rootView.findViewById(R.id.dropdown_text);
         Resources res1 = getResources();
-        labelLanguages = res1.getStringArray(R.array.Languages);
+        labelLanguages = res1.getStringArray(R.array.settings_language_list);
 
        // dropDownText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_edit_24px, 0,0,0);
        // dropDownText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_bell_24px, 0,0,0);
@@ -123,10 +123,10 @@ public class PreferencesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String item = dropDownText.getText().toString();
-                if (item .equals("Spanish")){
+                if (item .equals(R.string.settings_language_es)){
                     setLocale("es");
                 }
-                if (item .equals("English")) {
+                if (item .equals(R.string.settings_language_en)) {
                     setLocale("en");
                 }
             }
@@ -143,10 +143,10 @@ public class PreferencesFragment extends Fragment {
                 // TODO: This alert needs improvements!
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                builder.setTitle("Logout");
-                builder.setMessage("Are you sure?");
+                builder.setTitle(R.string.settings_logout_alert_title);
+                builder.setMessage(R.string.settings_logout_alert_msg);
 
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(R.string.settings_logout_alert_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         MainActivity.sharedPref.edit().remove(MainActivity.MY_USER_KEY).apply(); // Removes stored user in memory just for safety!
                         signOut();
@@ -154,7 +154,7 @@ public class PreferencesFragment extends Fragment {
                     }
                 });
 
-                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(R.string.settings_logout_alert_no, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Nothing else happens

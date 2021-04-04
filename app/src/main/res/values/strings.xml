@@ -1,20 +1,61 @@
 <resources>
     <string name="app_name">YikesPark</string>
-    <string name="title_activity_maps">Map</string>
-    <string name="btnMap">Map</string>
-    <string name="btnProfile">Profile</string>
-    <string name="btnSettings">Settings</string>
-    <string name="txtSave">Save</string>
-    <string name="Language">Language</string>
+    <!-- Carousel images before login-->
     <string name="image0">Discover, share and have fun with the new application by and for skaters</string>
     <string name="image1">Share knowledge and learn with people with the same tastes</string>
     <string name="image2">Discover and add spots to enjoy your hobbies</string>
     <string name="image3">Share the specifications of your skates, scooters, bicycles and more in your profile</string>
-    <string name="server_client_id">357211955056-2ju58fr2hhms90os7j5agfdepdgu589u.apps.googleusercontent.com</string>
-    <string-array name="Languages">
-        <item>English</item>
-        <item>Spanish</item>
+    <!-- App navigation -->
+    <string name="nav_bar_map">Map</string>
+    <string name="nav_bar_profile">Profile</string>
+    <string name="nav_bar_settings">Settings</string>
+    
+    <!-- Settings section -->
+    <string name="settings_language_header">Interface</string>
+    <string name="settings_hint_language">Language</string>
+    <string name="settings_language_es">Español</string>
+    <string name="settings_language_en">English</string>
+
+    <string-array name="settings_language_list">
+        <item>@string/settings_language_es</item>
+        <item>@string/settings_language_en</item>
     </string-array>
+    <string name="settings_save_btn">Save</string>
+
+    <string name="settings_permissions_header">Permissions</string>
+    <string name="settings_e_notifications">Enable Notifications</string>
+    <string name="settings_e_geoloc">Enable Geolocation</string>
+    <string name="settings_e_camera">Enable Camera</string>
+    <string name="settings_e_Gallery">Enable Gallery</string>
+
+    <string name="settings_account_header">Account</string>
+    <string name="settings_logout_btn">LOGOUT</string>
+    <string name="settings_logout_alert_title">Logout</string>
+    <string name="settings_logout_alert_msg">Are you sure?</string>
+    <string name="settings_logout_alert_yes">YES</string>
+    <string name="settings_logout_alert_no">NO</string>
+
+    <!-- Map section -->
+    <string name="server_client_id">357211955056-2ju58fr2hhms90os7j5agfdepdgu589u.apps.googleusercontent.com</string>
     <string name="map_id">874d74e7c8174993</string>
+
+    <string name="map_warning_permissions_disabled">You have important permissions disabled!</string>
+    <string name="map_warning_permissions_disabled_close">CLOSE</string>
+
+    <string name="map_your_location">Your Location</string>
+    <string name="map_mark_snippet">Tab for more info!</string>
+
+    <!-- Adding New Spot section -->
+    <string name="new_spot_add_btn">Upload</string>
+    <string name="new_spot_name_hit">Your YikeSpot Name</string>
+    <string name="new_spot_uploading">Uploading...</string>
+    <string name="new_spot_error_cannot_be_empty">Error! The spot name cannot be empty!</string>
+    <string name="new_spot_error_not_success_upload">An error has occurred!</string>
+    <string name="new_spot_success_upload">Successfully added!</string>
+
+    <!-- YikeSpot Information -->
+    <string name="spot_added_by">&#160;by:&#160;</string>
+    <string name="spot_lat_long">Latitude and longitude:&#160;</string>
+    <string name="spot_remove_spot">Remove YikeSpot</string>
 
 </resources>

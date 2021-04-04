@@ -33,7 +33,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="YikeSpot name"
+        android:hint="@string/new_spot_name_hit"
         android:layout_marginTop="16dp"
         tools:ignore="MissingConstraints">
         <com.google.android.material.textfield.TextInputEditText
@@ -48,6 +48,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Add Spot" />
+        android:text="@string/new_spot_add_btn" />
 
 </LinearLayout>

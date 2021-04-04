@@ -6,9 +6,13 @@ package com.yikes.park.menu.map;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -32,6 +36,7 @@ import com.google.android.libraries.maps.CameraUpdateFactory;
 import com.google.android.libraries.maps.GoogleMap;
 import com.google.android.libraries.maps.OnMapReadyCallback;
 import com.google.android.libraries.maps.SupportMapFragment;
+import com.google.android.libraries.maps.model.BitmapDescriptor;
 import com.google.android.libraries.maps.model.BitmapDescriptorFactory;
 import com.google.android.libraries.maps.model.LatLng;
 import com.google.android.libraries.maps.model.MapStyleOptions;
@@ -137,12 +142,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             markerName.remove();
             markerName = null;
         }
-
-        markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
+        //markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_mylocation))));
+        markerName = mMap.addMarker(new MarkerOptions().position(myLocation).title("Your Location").icon((bitmapDescriptorFromVector(getActivity(), R.drawable.ic_skater_multilayer))));
     }
 
 
-    /** This method is need in order to update the information when the screen is resumed */
+    /** This method is needed in order to update the information when the screen is resumed */
     public void setUpMyLocation() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         AirLocation mAirLocation = new AirLocation(requireActivity(), new AirLocation.Callback() {
@@ -203,7 +208,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                     .position(park)
                                     .title("SP: " + skatePark.getName())
                                     .snippet("Tab for more info!")
-                                    .icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_ramp)))
+                                    .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_skatepark_multilayer))
+                                    //.icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_ramp)))
                     )
                             .setTag(skatePark);
                 }
@@ -230,7 +236,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                     .position(spot)
                                     .title("YS: " + yikeSpot.getName())
                                     .snippet("Tab for more info!")
-                                    .icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot)))
+                                    .icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_yikespot_multilayer))
+                                    //.icon((BitmapDescriptorFactory.fromResource(R.drawable.marker_hotspot)))
                     )
                             .setTag(yikeSpot);
 
@@ -302,5 +309,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             setMyLocationMarker(myLocationCoordinates);
             setUpMap();
         }
+    }
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

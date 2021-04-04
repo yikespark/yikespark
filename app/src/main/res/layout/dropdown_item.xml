@@ -7,7 +7,5 @@
     android:text="Sample Text"
     android:maxLines="1"
     android:textAppearance="?attr/textAppearanceSubtitle1"
-    tools:ignore="HardcodedText"
-    android:background="@color/app_element_color"
-    android:textColor="@color/app_white_text_color">
+    tools:ignore="HardcodedText">
 </TextView>

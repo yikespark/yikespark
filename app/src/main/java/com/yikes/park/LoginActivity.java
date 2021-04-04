@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         /** Image carousel on login screen */
         @Override
         public View setViewForPosition(int position) {
-            @SuppressLint("InflateParams") View customView = getLayoutInflater().inflate(R.layout.view_custom, null);
+        View customView = getLayoutInflater().inflate(R.layout.view_custom,null);
             // Set view attributes here
             TextView text = customView.findViewById(R.id.login_desc_text);
             ImageView image = customView.findViewById(R.id.login_background_image);

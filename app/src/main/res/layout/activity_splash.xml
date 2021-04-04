@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/app_bg_color"
     tools:context=".SplashActivity">
 
     <!-- This image is optional, remove or replace it -->
@@ -18,7 +17,6 @@
         android:id="@+id/splash_logo_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/app_white_text_color"
         android:text="YIKESPARK"
         android:textStyle="bold"
         android:textSize="60dp" />

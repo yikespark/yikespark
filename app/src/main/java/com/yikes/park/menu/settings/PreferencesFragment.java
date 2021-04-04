@@ -213,7 +213,6 @@ public class PreferencesFragment extends Fragment {
 
     // Checks Permissions to modify the Switch status
     private void checkPermissions() {
-
         if (!NotificationManagerCompat.from(getContext()).areNotificationsEnabled()) {
             notifications.setChecked(false);
             notificationsCard.setOnClickListener(new View.OnClickListener() {

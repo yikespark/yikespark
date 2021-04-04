@@ -34,11 +34,10 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 if (user != null) {
                     startActivity(mainActivityIntent);
-                    finish();
                 } else {
                     startActivity(loginActivityIntent);
-                    finish();
                 }
+                finish();
             }
         },50);
     }

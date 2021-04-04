@@ -4,16 +4,16 @@
     <item
         android:id="@+id/navigation_map"
         android:icon="@drawable/ic_explore_24px"
-        android:title="@string/btnMap" />
+        android:title="@string/nav_bar_map" />
 
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_account_circle_24px"
-        android:title="@string/btnProfile" />
+        android:title="@string/nav_bar_profile" />
 
     <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/ic_settings_24px"
-        android:title="@string/btnSettings" />
+        android:title="@string/nav_bar_settings" />
 
 </menu>

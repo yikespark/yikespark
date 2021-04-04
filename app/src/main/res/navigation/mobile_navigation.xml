@@ -8,19 +8,19 @@
     <fragment
         android:id="@+id/navigation_map"
         android:name="com.yikes.park.menu.map.MapsFragment"
-        android:label="@string/btnMap"
+        android:label="@string/nav_bar_map"
         tools:layout="@layout/fragment_map" />
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.yikes.park.menu.profile.ProfileFragment"
-        android:label="@string/btnProfile"
+        android:label="@string/nav_bar_profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_settings"
         android:name="com.yikes.park.menu.settings.PreferencesFragment"
-        android:label="@string/btnSettings"
+        android:label="@string/nav_bar_settings"
         tools:layout="@layout/fragment_settings" />
 
 </navigation>

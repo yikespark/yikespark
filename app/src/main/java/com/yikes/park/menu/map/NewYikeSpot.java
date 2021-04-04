@@ -136,7 +136,7 @@ public class NewYikeSpot extends AppCompatActivity {
                 //Log.i("Checar", String.valueOf(newSpotName.getText()));
 
                 if (String.valueOf(newSpotName.getText()).equals("")) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Error! The spot name cannot be empty!", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getApplicationContext(), R.string.new_spot_error_cannot_be_empty, Toast.LENGTH_LONG);
                     toast.show();
 
                 } else {
@@ -172,11 +172,11 @@ public class NewYikeSpot extends AppCompatActivity {
                                     @Override
                                     public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                                         if (!task.isSuccessful()) {
-                                            Toast toast = Toast.makeText(getApplicationContext(), "An error has occurred!", Toast.LENGTH_LONG);
+                                            Toast toast = Toast.makeText(getApplicationContext(), R.string.new_spot_error_not_success_upload, Toast.LENGTH_LONG);
                                             toast.show();
                                             throw task.getException();
                                         } else {
-                                            Toast toast = Toast.makeText(getApplicationContext(), "Successfully added!", Toast.LENGTH_LONG);
+                                            Toast toast = Toast.makeText(getApplicationContext(), R.string.new_spot_success_upload, Toast.LENGTH_LONG);
                                             toast.show();
                                         }
                                         // Continue with the task to get the download URL
@@ -307,7 +307,7 @@ public class NewYikeSpot extends AppCompatActivity {
         // Create parameters for Intent with filename
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, fileName);
-        values.put(MediaStore.Images.Media.DESCRIPTION, "Image capture by camera");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "Image captured by camera");
         uri =
                 getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                         values);

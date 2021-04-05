@@ -2,14 +2,29 @@
 <resources>
 
     <style name="Theme.Yikes" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimary">#BB86FC</item>
-        <item name="colorOnPrimary">#222222</item>
-        <item name="android:windowBackground">#222222</item>
-        <item name="fontFamily">@font/montserrat_bold</item>
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:fontFamily">@font/montserrat_bold</item>
+        <item name="android:windowBackground">@color/app_bg_color</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:textColor">@color/app_white_text_color</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- Based on Material.io design: https://lh3.googleusercontent.com/d7uyZ5bZHGo5r7D_vn7ZI5nJs52t8f9o-fAVa-nt7pQw_s4Y5pTczetkfwDT9ZtQ1LuO0DAGFzWfaAsblwhokdP9PTNNv3S3-h_SqLA=w1064-v0 -->
+        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="background">@color/app_bg_color</item>
+        <item name="colorSurface">@color/app_bg_color</item>
+        <item name="colorError">@color/red_100</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnError">@color/black</item>
+    </style>
+    <!-- Components -->
+    <style name="SettingsCardView" parent="CardView">
+        <item name="cardBackgroundColor">@color/app_element_color</item>
     </style>
 </resources>

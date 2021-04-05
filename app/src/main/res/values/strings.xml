@@ -46,12 +46,17 @@
     <string name="map_mark_snippet">Tab for more info!</string>
 
     <!-- Adding New Spot section -->
+    <string name="new_spot_header">Create a YikeSpot</string>
     <string name="new_spot_add_btn">Upload</string>
     <string name="new_spot_name_hit">Your YikeSpot Name</string>
     <string name="new_spot_uploading">Uploading...</string>
     <string name="new_spot_error_cannot_be_empty">Error! The spot name cannot be empty!</string>
+    <string name="new_spot_error_image_cannot_be_empty">Error! You must upload a picture!</string>
     <string name="new_spot_error_not_success_upload">An error has occurred!</string>
     <string name="new_spot_success_upload">Successfully added!</string>
+    <string name="new_spot_img_title">Upload an image from...</string>
+    <string name="new_spot_camera">Camera</string>
+    <string name="new_spot_gallery">Gallery</string>
 
     <!-- YikeSpot Information -->
     <string name="spot_added_by">&#160;by:&#160;</string>

@@ -135,7 +135,7 @@ public class PreferencesFragment extends Fragment {
 
         /** Sing out */
         final Button btn_logout = rootView.findViewById(R.id.settings_logout_btn);
-        btn_logout.setBackgroundColor(Color.RED);
+        btn_logout.setBackgroundColor(getResources().getColor(R.color.red_700));
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override

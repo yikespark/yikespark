@@ -9,26 +9,26 @@
     android:layout_marginBottom="16dp"
     android:layout_marginStart="16dp"
     android:layout_marginEnd="16dp"
-    android:gravity="center"
     tools:context=".menu.map.NewYikeSpot">
 
+    <TextView
+        android:id="@+id/addNewSpotHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/new_spot_header"
+        android:textSize="20dp"
+        android:textColor="@color/app_gray_title_text_color"
+        android:paddingTop="5dp" />
 
     <ImageView
         android:id="@+id/image_yikespot"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:clickable="true"
-        android:src="@drawable/ic_image_default_24px">
+        android:src="@drawable/ic_camera_frame"
+        android:paddingTop="20dp">
         <!-- android:alpha="0.2" -->
     </ImageView>
-
-    <Button
-        android:id="@+id/image_yikespot_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="HAÑADIR PHOTO" />
-
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
@@ -48,6 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/new_spot_add_btn" />
-
+        android:text="@string/new_spot_add_btn"
+        app:icon="@drawable/ic_upload_24dp"
+        app:iconPadding="-32dp"
+        tools:ignore="HardcodedText" />
 </LinearLayout>

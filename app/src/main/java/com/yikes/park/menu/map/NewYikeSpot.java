@@ -1,9 +1,11 @@
 package com.yikes.park.menu.map;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,8 +14,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +42,7 @@ import com.yikes.park.getUserData;
 import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.Objects.YikeSpot;
 import com.yikes.park.menu.profile.data.UserInformation;
+import com.yikes.park.util.ArrayAdapterWithIcon;
 import com.yikes.park.util.LoadingAlert;
 
 import java.io.File;
@@ -59,7 +64,6 @@ public class NewYikeSpot extends AppCompatActivity {
     private UserInformation myUser;
     private ImageView spot_img;
     private Uri uri;
-    private ImageView add_img_from_camera;
 
     private LoadingAlert loading;
 
@@ -85,36 +89,26 @@ public class NewYikeSpot extends AppCompatActivity {
             }
         });
 
-        /* Upload image buttons */
+        // Upload image buttons
         spot_img = findViewById(R.id.image_yikespot);
-        add_img_from_camera = spot_img;
-        add_img_from_camera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-                } else if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY_REQUEST_WRITE_CODE);
-                } else {
-                    loadImageFromCamera();
-                }
-            }
-        });
+        spot_img.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               final String [] items = new String[] {getString(R.string.new_spot_gallery), getString(R.string.new_spot_camera)};
+               final Integer[] icons = new Integer[] {R.drawable.ic_folder_black_24dp, R.drawable.ic_camera_24px};
+               ListAdapter adapter = new ArrayAdapterWithIcon(NewYikeSpot.this, items, icons);
 
-        Button add_img_from_gallery = findViewById(R.id.image_yikespot_btn);
-        add_img_from_gallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQUEST_CODE);
-                } else if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-                    ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY_REQUEST_WRITE_CODE);
-                } else {
-                    loadImageFromGallery();
-                }
-            }
-        });
+               new AlertDialog.Builder(NewYikeSpot.this).setTitle(getString(R.string.new_spot_img_title)).setAdapter(adapter, new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int item ) {
+                       if (item == 0) {
+                           itemGallery();
+                       } else if (item == 1) {
+                           itemCamera();
+                       }
+                   }
+               }).show();
+           }
+       });
 
         TextView newSpotName = findViewById(R.id.newSpotName);
 
@@ -143,13 +137,12 @@ public class NewYikeSpot extends AppCompatActivity {
                 if (String.valueOf(newSpotName.getText()).equals("")) {
                     Toast toast = Toast.makeText(getApplicationContext(), R.string.new_spot_error_cannot_be_empty, Toast.LENGTH_LONG);
                     toast.show();
-
                 } else {
                     double myLatitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LATITUDE_KEY, "0"));
                     double myLongitude = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LONGITUDE_KEY, "0"));
-                    loading.startLoading();
+                    if (uri != null) { // If we got an URI, we can continue
+                        loading.startLoading();
 
-                    if (uri != null) { // If no URI, then put a default one
                         StorageReference storageRef = storage.getReference();
                         StorageReference Folder = storageRef.child("yikeSpot/" + uri.getLastPathSegment());
 
@@ -217,6 +210,8 @@ public class NewYikeSpot extends AppCompatActivity {
                          *  Se debe añadir una imagen por defecto en caso de que el usuario no añada ninguna imagen:
                          *  imgURL = AÑADIR UNA URI POR DEFECTO;
                          */
+                        Toast toast = Toast.makeText(getApplicationContext(), R.string.new_spot_error_image_cannot_be_empty, Toast.LENGTH_LONG);
+                        toast.show();
                     }
                 }
             }
@@ -342,7 +337,7 @@ public class NewYikeSpot extends AppCompatActivity {
                 ContentResolver cr = getContentResolver();
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(cr, uri);
-                    add_img_from_camera.setImageBitmap(bitmap);
+                    spot_img.setImageBitmap(bitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -370,6 +365,26 @@ public class NewYikeSpot extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // The user now has gallery permissions
             }
+        }
+    }
+
+    private void itemCamera() {
+        if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+        } else if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY_REQUEST_WRITE_CODE);
+        } else {
+            loadImageFromCamera();
+        }
+    }
+
+    private void itemGallery() {
+        if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_REQUEST_CODE);
+        } else if (ContextCompat.checkSelfPermission(NewYikeSpot.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(NewYikeSpot.this, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, GALLERY_REQUEST_WRITE_CODE);
+        } else {
+            loadImageFromGallery();
         }
     }
 }

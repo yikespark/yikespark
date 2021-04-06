@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/app_bg_color"
     android:gravity="center"
     tools:context=".SplashActivity">
 
@@ -13,11 +14,11 @@
         android:layout_height="150dp"
         android:background="@drawable/ic_skateboard" />
 
-    <TextView
-        android:id="@+id/splash_logo_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="YIKESPARK"
-        android:textStyle="bold"
-        android:textSize="60dp" />
+    <ImageView
+        android:paddingTop="5dp"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:background="@drawable/ic_yikespark_logo" />
+
+
 </LinearLayout>

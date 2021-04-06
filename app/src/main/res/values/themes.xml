@@ -27,4 +27,13 @@
     <style name="SettingsCardView" parent="CardView">
         <item name="cardBackgroundColor">@color/app_element_color</item>
     </style>
+
+    <!-- Splash Screen -->
+    <style name="Theme.YikeSplash" parent="Theme.Yikes">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/app_bg_color</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+
 </resources>

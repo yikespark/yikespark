@@ -50,7 +50,7 @@
         <activity android:name=".LoginActivity"
             android:hardwareAccelerated="false"
             />
-        <activity android:name=".SplashActivity">
+        <activity android:name=".SplashActivity" android:theme="@style/Theme.YikeSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

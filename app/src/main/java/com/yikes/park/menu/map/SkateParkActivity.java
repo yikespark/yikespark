@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.android.libraries.maps.model.Marker;
@@ -30,9 +31,11 @@ public class SkateParkActivity extends AppCompatActivity {
 
         TextView name = findViewById(R.id.name);
         name.setText(skatePark.getName());
-        TextView lat = findViewById(R.id.lat);
-        lat.setText(Double.toString(skatePark.getLat()));
-        TextView lon = findViewById(R.id.lon);
-        lon.setText(Double.toString(skatePark.getLon()));
+
+        TextView latlon = findViewById(R.id.splatlong);
+        latlon.setText(skatePark.getLat() + ", " + skatePark.getLon());
+
+        RatingBar spRating = findViewById(R.id.rating);
+        spRating.setRating(Integer.parseInt(skatePark.getType()));
     }
 }

@@ -3,6 +3,8 @@ package com.yikes.park.menu.map;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,8 +36,7 @@ public class YikesSpotActivity extends AppCompatActivity {
     private YikeSpot yikeSpot;
 
     private TextView name;
-    private TextView lat;
-    private TextView lon;
+    private TextView latlon;
     private TextView id;
 
     private Button removeSpotBtn;
@@ -63,19 +64,20 @@ public class YikesSpotActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         name.setText(yikeSpot.getName());
 
-        lat = findViewById(R.id.lat);
-        lat.setText(Double.toString(yikeSpot.getLat()));
 
-        lon = findViewById(R.id.lon);
-        lon.setText(Double.toString(yikeSpot.getLon()));
+        latlon = findViewById(R.id.latlong);
+        latlon.setText(yikeSpot.getLat() + ", " + yikeSpot.getLon());
+        // latlon.setText(Html.fromHtml("<a href=\"https://www.google.com/maps?layer=c&cbll=\">" + yikeSpot.getLat() + "," + yikeSpot.getLon()+"</a>"));
+        // latlon.setMovementMethod(LinkMovementMethod.getInstance());
 
         id = findViewById(R.id.id);
-        id.setText(yikeSpot.getId());
+        id.setText("ID: " + yikeSpot.getId());
 
         Glide.with(this).load(yikeSpot.getPicture()).into((ImageView) findViewById(R.id.imageView));
 
         /* Allow to remove the Spot if the visitor is the owner */
         removeSpotBtn = findViewById(R.id.removeSpot);
+        removeSpotBtn.setBackgroundColor(getResources().getColor(R.color.red_700));
         if (yikeSpot.getCreator().equals(user.getUid())) {
             removeSpotBtn.setVisibility(View.VISIBLE);
             removeSpotBtn.setOnClickListener(new View.OnClickListener() {

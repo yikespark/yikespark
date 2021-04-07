@@ -35,12 +35,15 @@
         android:layout_height="wrap_content"
         android:hint="@string/new_spot_name_hit"
         android:layout_marginTop="16dp"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        app:counterEnabled="true"
+        app:counterMaxLength="35">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/newSpotName"
             android:inputType="textPersonName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:maxLength="35"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

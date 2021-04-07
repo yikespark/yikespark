@@ -59,8 +59,9 @@
     <string name="new_spot_gallery">Gallery</string>
 
     <!-- YikeSpot Information -->
-    <string name="spot_added_by">&#160;by:&#160;</string>
-    <string name="spot_lat_long">Latitude and longitude:&#160;</string>
+    <string name="spot_coords">Coords</string>
+    <string name="spot_author">Author</string>
+    <string name="spot_rating">Yikes Rating</string>
     <string name="spot_remove_spot">Remove YikeSpot</string>
 
 </resources>

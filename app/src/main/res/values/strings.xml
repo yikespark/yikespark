@@ -5,6 +5,9 @@
     <string name="image1">Share knowledge and learn with people with the same tastes</string>
     <string name="image2">Discover and add spots to enjoy your hobbies</string>
     <string name="image3">Share the specifications of your skates, scooters, bicycles and more in your profile</string>
+    <!-- Login loading message -->
+    <string name="logging_in">Logging in...</string>
+
     <!-- App navigation -->
     <string name="nav_bar_map">Map</string>
     <string name="nav_bar_profile">Profile</string>

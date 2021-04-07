@@ -8,6 +8,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -87,6 +88,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+
 
         /** Checks if user has the GPS disabled, if so, a message is shown */
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -199,7 +201,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             boolean success = mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             getContext(), R.raw.style_json));
-
             if (!success) {
                 Log.e("TAG", "Style parsing failed.");
             }
@@ -288,7 +289,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                                 startActivity(intent);
                             }
                         }});
-
                 }
             }
 
@@ -302,6 +302,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(false);
         setUpMap();
     }
 
@@ -335,4 +338,5 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+
 }

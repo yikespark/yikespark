@@ -30,6 +30,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 import com.yikes.park.menu.MainActivity;
+import com.yikes.park.util.LoadingAlert;
 
 import java.util.List;
 
@@ -130,17 +131,21 @@ public class LoginActivity extends AppCompatActivity {
     // Creates the real credentials to Sign-in!
     private void firebaseAuthWithGoogle(String idToken) {
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        LoadingAlert alerta = new LoadingAlert(this, getString(R.string.logging_in));
+        alerta.startLoading();
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            alerta.finishLoading();
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("SignIn", "signInWithCredential:success");
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
+                            alerta.finishLoading();
                             Log.w("SignIn", "signInWithCredential:failure", task.getException());
                         }
                     }

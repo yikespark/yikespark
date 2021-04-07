@@ -16,9 +16,11 @@ public class LoadingAlert {
     private AlertDialog alert;
 
     private TextView loadingText;
+    private String message;
 
-    public LoadingAlert(Activity activity) {
+    public LoadingAlert(Activity activity, String message) {
         this.activity = activity;
+        this.message = message;
     }
 
     public void startLoading() {
@@ -28,7 +30,7 @@ public class LoadingAlert {
         View view = inflater.inflate(R.layout.dialog_loading, null);
 
         loadingText = view.findViewById(R.id.progressText);
-        loadingText.setText("Uploading..."); // To translate with XML
+        loadingText.setText(this.message); // To translate with XML
 
         builder.setView(view);
         builder.setCancelable(false);

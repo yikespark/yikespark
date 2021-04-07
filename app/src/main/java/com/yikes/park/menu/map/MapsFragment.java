@@ -76,6 +76,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private Location myLocation;
     private LatLng myLocationCoordinates;
     private RequestQueue mQueue;
+
+    private FloatingActionButton zoomInBtn;
+    private FloatingActionButton zoomOutBtn;
+
     LatLng myDestinationCoordinates;
 
     public MapsFragment() {
@@ -88,7 +92,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-
 
         /** Checks if user has the GPS disabled, if so, a message is shown */
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -112,6 +115,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
         // Buttons
+        zoomInBtn = rootView.findViewById(R.id.zoomInBtn);
+        zoomOutBtn = rootView.findViewById(R.id.zoomOutBtn);
+
         FloatingActionButton addNewSpotBtn = rootView.findViewById(R.id.plus);
         FloatingActionButton goToMyLocBtn = rootView.findViewById(R.id.centerCamera);
 
@@ -135,6 +141,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocationCoordinates, 15.3432f));
+            }
+        });
+
+        zoomInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap != null) {
+                    mMap.animateCamera(CameraUpdateFactory.zoomIn());
+                }
+            }
+        });
+
+        zoomOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMap != null) {
+                    mMap.animateCamera(CameraUpdateFactory.zoomOut());
+                }
             }
         });
 
@@ -303,7 +327,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setCompassEnabled(false);
         setUpMap();
     }

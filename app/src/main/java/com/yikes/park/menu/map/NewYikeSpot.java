@@ -78,7 +78,7 @@ public class NewYikeSpot extends AppCompatActivity {
         setContentView(R.layout.activity_newspot);
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        loading = new LoadingAlert(this);
+        loading = new LoadingAlert(this, getString(R.string.new_spot_uploading));
 
         /* Loads user information */
         new getUserData().UserData(new getUserData.Call() {

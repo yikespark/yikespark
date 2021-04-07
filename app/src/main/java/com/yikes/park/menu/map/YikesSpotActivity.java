@@ -1,10 +1,16 @@
 package com.yikes.park.menu.map;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.yikes.park.R;
+import com.yikes.park.menu.MainActivity;
 import com.yikes.park.menu.map.Objects.YikeSpot;
 import com.yikes.park.menu.profile.data.UserInformation;
 
@@ -66,9 +74,25 @@ public class YikesSpotActivity extends AppCompatActivity {
 
 
         latlon = findViewById(R.id.latlong);
-        latlon.setText(yikeSpot.getLat() + ", " + yikeSpot.getLon());
-        // latlon.setText(Html.fromHtml("<a href=\"https://www.google.com/maps?layer=c&cbll=\">" + yikeSpot.getLat() + "," + yikeSpot.getLon()+"</a>"));
-        // latlon.setMovementMethod(LinkMovementMethod.getInstance());
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_DENIED && ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_DENIED) {
+            double curUserLat = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LATITUDE_KEY, "0"));
+            double curUserLon = Double.parseDouble(MainActivity.sharedPref.getString(MainActivity.LONGITUDE_KEY, "0"));
+            String mapUrl = "<a href='https://www.google.com/maps/dir/?api=1&origin=" + curUserLat + "," + curUserLon + "&destination=" + yikeSpot.getLat() + "," + yikeSpot.getLon() + "'>" + yikeSpot.getLat() + ", " + yikeSpot.getLon() + "</a>";
+            // Removes underline from HTML Text
+            Spannable s = (Spannable) Html.fromHtml(mapUrl);
+            for (URLSpan u: s.getSpans(0, s.length(), URLSpan.class)) {
+                s.setSpan(new UnderlineSpan() {
+                    public void updateDrawState(TextPaint tp) {
+                        tp.setUnderlineText(false);
+                    }
+                }, s.getSpanStart(u), s.getSpanEnd(u), 0);
+            }
+            latlon.setText(s);
+            latlon.setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+            latlon.setText(yikeSpot.getLat() + ", " + yikeSpot.getLon());
+        }
 
         id = findViewById(R.id.id);
         id.setText("ID: " + yikeSpot.getId());

@@ -1,12 +1,16 @@
 package com.yikes.park.menu.profile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,12 +71,8 @@ public class ProfileFragment extends Fragment {
                 Glide.with(getContext()).load(my_user.getAvatar()).apply(options).into((ImageView) rootView.findViewById(R.id.profile_user_image));
                 TextView myUserName = rootView.findViewById(R.id.profile_field1);
                 myUserName.setText(my_user.getUsername());
-                TextView followers = rootView.findViewById(R.id.profile_followers);
-                followers.setText(String.valueOf(my_user.getFollowers()));
                 TextView email = rootView.findViewById(R.id.email);
                 email.setText(my_user.getEmail());
-                TextView id = rootView.findViewById(R.id.id);
-                id.setText(my_user.getId());
                 TextView desc = rootView.findViewById(R.id.desc);
                 desc.setText(my_user.getDesc());
             }
@@ -83,6 +83,64 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.i("prueba", "Editando!");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+                LinearLayout layout = new LinearLayout(getContext());
+                layout.setOrientation(LinearLayout.VERTICAL);
+
+                final EditText nameBox = new EditText(getContext());
+                nameBox.setHint("Name");
+                nameBox.setText(my_user.getUsername());
+                layout.addView(nameBox);
+
+                final EditText descriptionBox = new EditText(getContext());
+                descriptionBox.setHint("Description");
+                descriptionBox.setText(my_user.getDesc());
+                layout.addView(descriptionBox);
+
+                builder.setView(layout);
+
+                builder.setPositiveButton("Save" , new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int lengthName = nameBox.getText().toString().length();
+                        int lenghtDesc = descriptionBox.getText().toString().length();
+                        if (nameBox.getText().toString().length() != 0 && descriptionBox.getText().toString().length() != 0){
+                            db.child(my_user.getId()).child("username").setValue(nameBox.getText().toString());
+                            db.child(my_user.getId()).child("desc").setValue(descriptionBox.getText().toString());
+
+                            TextView myUserName = rootView.findViewById(R.id.profile_field1);
+                            myUserName.setText(nameBox.getText().toString());
+
+                            TextView desc = rootView.findViewById(R.id.desc);
+                            desc.setText(descriptionBox.getText().toString());
+
+                            my_user.setUsername(nameBox.getText().toString());
+                            my_user.setDesc(descriptionBox.getText().toString());
+                        }
+
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                /*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                final EditText name = new EditText(getContext());
+                final EditText desc = new EditText(getContext());
+
+                name.setHint("Name");
+                builder.addView(name);
+
+                desc.setHint("Desc");
+                builder.setView(desc);
+
+                builder.setPositiveButton("Save", null);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();*/
             }
         });
         return rootView;

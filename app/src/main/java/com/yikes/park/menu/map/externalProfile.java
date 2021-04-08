@@ -43,19 +43,15 @@ public class externalProfile extends AppCompatActivity {
                             UserInformation userInformation = task.getResult().getValue(UserInformation.class);
                             Log.d("userInformation", userInformation.toString());
 
-                            TextView name = findViewById(R.id.name);
+                            TextView name = findViewById(R.id.profile_field1);
                             name.setText(userInformation.getUsername());
-                            TextView followers = findViewById(R.id.followers);
-                            followers.setText(String.valueOf(userInformation.getFollowers()));
                             TextView email = findViewById(R.id.email);
                             email.setText(userInformation.getEmail());
-                            TextView id = findViewById(R.id.id);
-                            id.setText(userInformation.getId());
                             TextView desc = findViewById(R.id.desc);
                             desc.setText(userInformation.getDesc());
                             RequestOptions options = new RequestOptions();
                             options.circleCrop();
-                            Glide.with(getBaseContext()).load(userInformation.getAvatar()).apply(options).into((ImageView) findViewById(R.id.profile));
+                            Glide.with(getBaseContext()).load(userInformation.getAvatar()).apply(options).into((ImageView) findViewById(R.id.profile_user_image));
 
                         }
                     }

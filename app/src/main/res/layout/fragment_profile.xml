@@ -21,7 +21,7 @@
             android:id="@+id/profile_user_image"
             android:layout_width="160px"
             android:layout_height="160px"
-            android:layout_marginRight="11dp"
+            android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
             app:srcCompat="@drawable/ic_account_circle_24px" />
 

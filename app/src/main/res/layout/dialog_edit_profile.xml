@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="50dp"
+    android:orientation="vertical"
+    android:background="@color/app_element_color">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Information"
+            android:textSize="25dp"
+            android:textColor="@color/purple_200"
+            android:textStyle="bold">
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/app_gray_title_text_color"
+            android:text="Your profile name">
+        </TextView>
+
+        <EditText
+            android:id="@+id/editUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:maxLength="15"
+            android:drawableLeft="@drawable/ic_user_name_24dp"
+            android:drawablePadding="10dp"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="About you"
+            android:textSize="18sp"
+            android:textColor="@color/app_gray_title_text_color">
+        </TextView>
+        <EditText
+            android:id="@+id/editUserDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:maxLength="35"
+            android:drawableLeft="@drawable/ic_user_desc_24dp"
+            android:drawablePadding="10dp"
+            />
+        <Button
+            android:id="@+id/saveInformatioBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_save_btn"
+            app:icon="@drawable/ic_save_24px"
+            app:iconPadding="-32dp"
+            ></Button>
+
+</LinearLayout>

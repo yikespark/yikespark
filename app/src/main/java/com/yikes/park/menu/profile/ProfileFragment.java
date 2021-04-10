@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,9 +16,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +34,10 @@ import com.google.gson.Gson;
 import com.yikes.park.R;
 import com.yikes.park.getUserData;
 import com.yikes.park.menu.MainActivity;
+import com.yikes.park.menu.map.Objects.YikeSpot;
+import com.yikes.park.menu.map.externalProfile;
 import com.yikes.park.menu.profile.data.UserInformation;
+import com.yikes.park.menu.profile.data.YikeSpotRecyclerView;
 
 import org.w3c.dom.Text;
 
@@ -77,6 +85,8 @@ public class ProfileFragment extends Fragment {
                 desc.setText(my_user.getDesc());
             }
         });
+
+        /** Profile Edit */
         // UserInformation myUser = new UserInformation(user.getUid(), user.getEmail(), String.valueOf(user.getPhotoUrl()));
         ImageButton editButton = rootView.findViewById(R.id.editButton);
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -86,27 +96,23 @@ public class ProfileFragment extends Fragment {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
-                LinearLayout layout = new LinearLayout(getContext());
-                layout.setOrientation(LinearLayout.VERTICAL);
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                View view = inflater.inflate(R.layout.dialog_edit_profile, null);
 
-                final EditText nameBox = new EditText(getContext());
-                nameBox.setHint("Name");
+                final EditText nameBox = view.findViewById(R.id.editUserName);
                 nameBox.setText(my_user.getUsername());
-                layout.addView(nameBox);
 
-                final EditText descriptionBox = new EditText(getContext());
-                descriptionBox.setHint("Description");
+                final EditText descriptionBox = view.findViewById(R.id.editUserDesc);
                 descriptionBox.setText(my_user.getDesc());
-                layout.addView(descriptionBox);
 
-                builder.setView(layout);
+                final Button saveBox = view.findViewById(R.id.saveInformatioBtn);
 
-                builder.setPositiveButton("Save" , new DialogInterface.OnClickListener() {
+                builder.setView(view);
+                AlertDialog dialog = builder.create();
+                dialog.show();
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int lengthName = nameBox.getText().toString().length();
-                        int lenghtDesc = descriptionBox.getText().toString().length();
+                saveBox.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
                         if (nameBox.getText().toString().length() != 0 && descriptionBox.getText().toString().length() != 0){
                             db.child(my_user.getId()).child("username").setValue(nameBox.getText().toString());
                             db.child(my_user.getId()).child("desc").setValue(descriptionBox.getText().toString());
@@ -119,30 +125,47 @@ public class ProfileFragment extends Fragment {
 
                             my_user.setUsername(nameBox.getText().toString());
                             my_user.setDesc(descriptionBox.getText().toString());
+                            dialog.dismiss();
                         }
-
                     }
                 });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-
-                /*AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                final EditText name = new EditText(getContext());
-                final EditText desc = new EditText(getContext());
-
-                name.setHint("Name");
-                builder.addView(name);
-
-                desc.setHint("Desc");
-                builder.setView(desc);
-
-                builder.setPositiveButton("Save", null);
-
-                AlertDialog dialog = builder.create();
-                dialog.show();*/
             }
         });
+
+        String userId = user.getUid();
+
+
+
+        /**TODO: Getting user spots, this stuff is broken and may cause unexpected crashes */
+        Task<DataSnapshot> dbYS = FirebaseDatabase.getInstance().getReference().child("YikeSpots").orderByChild("creator").equalTo(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                ArrayList<YikeSpot> ypList = new ArrayList<YikeSpot>();
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Log.d("PUTAIN", String.valueOf(task.getResult().getValue()));
+                    DataSnapshot dataSnapshot = task.getResult();
+
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        YikeSpot ypInfo = postSnapshot.getValue(YikeSpot.class);
+                        ypList.add(ypInfo);
+                    }
+                }
+
+                if (ypList != null) {
+                    RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.spotRecycler);
+                    recyclerView.setLayoutManager(new LinearLayoutManager((getContext())));
+
+                    // Sends all DB Issues
+                    YikeSpotRecyclerView adapter = new YikeSpotRecyclerView(getContext(), ypList);
+                    recyclerView.setAdapter(adapter);
+                }
+            }
+        });
+
+
         return rootView;
     }
 

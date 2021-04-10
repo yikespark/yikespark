@@ -2,6 +2,8 @@ package com.yikes.park.menu.map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +20,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.yikes.park.R;
+import com.yikes.park.menu.map.Objects.SkatePark;
+import com.yikes.park.menu.map.Objects.YikeSpot;
 import com.yikes.park.menu.profile.data.UserInformation;
+import com.yikes.park.menu.profile.data.YikeSpotRecyclerView;
+
+import java.util.ArrayList;
 
 public class externalProfile extends AppCompatActivity {
 
@@ -56,7 +63,33 @@ public class externalProfile extends AppCompatActivity {
                         }
                     }
                 });
-
         Log.d("TAG", dbUsers.toString());
+
+        Task<DataSnapshot> dbYS = FirebaseDatabase.getInstance().getReference().child("YikeSpots").orderByChild("creator").equalTo(userId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        ArrayList<YikeSpot> ypList = new ArrayList<YikeSpot>();
+                        if (!task.isSuccessful()) {
+                            Log.e("firebase", "Error getting data", task.getException());
+                        }
+                        else {
+                            DataSnapshot dataSnapshot = task.getResult();
+
+                            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                                YikeSpot ypInfo = postSnapshot.getValue(YikeSpot.class);
+                                ypList.add(ypInfo);
+                            }
+                        }
+
+                        if (ypList != null) {
+                            RecyclerView recyclerView = (RecyclerView)externalProfile.this.findViewById(R.id.spotExternalRecycler);
+                            recyclerView.setLayoutManager(new LinearLayoutManager((externalProfile.this)));
+
+                            // Sends all DB Issues
+                            YikeSpotRecyclerView adapter = new YikeSpotRecyclerView(externalProfile.this, ypList);
+                            recyclerView.setAdapter(adapter);
+                        }
+                    }
+                });
     }
 }

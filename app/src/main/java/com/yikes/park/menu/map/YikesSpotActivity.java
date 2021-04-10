@@ -116,9 +116,6 @@ public class YikesSpotActivity extends AppCompatActivity {
         } else {
             removeSpotBtn.setVisibility(View.GONE);
         }
-
-
-
     }
 
     public void onClick(View view) {

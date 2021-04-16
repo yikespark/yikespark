@@ -19,5 +19,8 @@
 - Customize, share and view your profile.
 - Real-Time map, stay tunned with fresh spots.
 - Optimized for all devices (even with your potato phone).
-- Open-Source with love (but only to anyone outside our class).
-- Get the spots coords with Google Maps.
+- Open-Sourced with love (but only to anyone outside our class).
+- Get the spots coords with Google Maps.  
+
+
+[![license](https://img.shields.io/github/license/yikespark/yikespark.svg?style=flat-square)](https://github.com/yikespark/yikespark/blob/master/LICENSE)

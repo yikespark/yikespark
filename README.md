@@ -23,4 +23,4 @@
 - Get the spots coords with Google Maps.  
 
 
-[![license](https://img.shields.io/github/license/yikespark/yikespark.svg?style=flat-square)](https://github.com/yikespark/yikespark/blob/master/LICENSE)
+[![license](https://img.shields.io/github/license/yikespark/yikespark.svg?style=flat-square)](https://github.com/yikespark/yikespark/blob/main/LICENSE)
